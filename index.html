@@ -699,7 +699,6 @@ const dataCache = new DataCache();
 
 // ===== 3. แทนที่ฟังก์ชัน loadData ด้วยนี้ =====
 async function loadData() {
-  // ตรวจสอบ cache ก่อน
   const cached = dataCache.get();
   if (cached) {
     studentsData = cached.students || [];
@@ -708,21 +707,18 @@ async function loadData() {
     return;
   }
 
-  // ถ้า cache หมดอายุ ดึงข้อมูลใหม่
   try {
-    const response = await fetch(`${API_URL}?action=getData`);
+    // ใช้ JSONP แทน fetch
+    const response = await fetch(`${API_URL}?action=getData&callback=processData`);
     const data = await response.json();
+    
     studentsData = data.students || [];
     activitiesData = data.activities || [];
     teachersData = data.teachers || [];
     
-    // เก็บลงใน cache
     dataCache.set(data);
-    
-    console.log('✅ Data loaded successfully');
   } catch (error) {
-    console.error('❌ Error loading data:', error);
-    alert('เกิดข้อผิดพลาดในการโหลดข้อมูล');
+    console.error('Error:', error);
   }
 }
 
