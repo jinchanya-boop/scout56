@@ -308,16 +308,20 @@
             overflow-y: auto;
         }
 
-        /* Modal Header ปรับสี */
-.modal-header {
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-  color: white !important;
-}
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
 
-.modal-header h2 {
-  color: white !important;
-  font-weight: 700 !important;
-}
+        .modal-header h2 {
+            font-size: 24px;
+            color: #1e3c72;
+        }
+
         .close-btn {
             background: none;
             border: none;
@@ -637,142 +641,6 @@ form {
   background: #e0e0e0;
 }
 
-/* Attendance Table ปรับปรุง */
-.attendance-table-enhanced {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-  background: white;
-}
-
-.attendance-table-enhanced th {
-  background: #1e3c72;
-  color: white;
-  padding: 12px;
-  text-align: left;
-  font-weight: 600;
-}
-
-.attendance-table-enhanced td {
-  padding: 10px 12px;
-  border-bottom: 1px solid #e9ecef;
-}
-
-.attendance-table-enhanced tr:hover {
-  background: #f8f9fa;
-}
-
-.attendance-status {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.status-radio {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  cursor: pointer;
-}
-
-.status-radio input[type="radio"] {
-  cursor: pointer;
-  width: 18px;
-  height: 18px;
-}
-
-.status-label {
-  font-size: 12px;
-  font-weight: 600;
-  padding: 4px 8px;
-  border-radius: 4px;
-  min-width: 45px;
-  text-align: center;
-}
-
-.status-present {
-  background: #d4edda;
-  color: #155724;
-}
-
-.status-late {
-  background: #fff3cd;
-  color: #856404;
-}
-
-.status-absent {
-  background: #f8d7da;
-  color: #721c24;
-}
-
-.status-truant {
-  background: #d1ecf1;
-  color: #0c5460;
-}
-
-.attendance-summary {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 12px;
-  margin-top: 20px;
-  padding: 20px;
-  background: #f8f9fa;
-  border-radius: 10px;
-}
-
-.summary-card {
-  background: white;
-  padding: 15px;
-  border-radius: 8px;
-  text-align: center;
-  border-left: 4px solid #1e3c72;
-}
-
-.summary-card.present {
-  border-left-color: #28a745;
-}
-
-.summary-card.late {
-  border-left-color: #ffc107;
-}
-
-.summary-card.absent {
-  border-left-color: #dc3545;
-}
-
-.summary-card.truant {
-  border-left-color: #17a2b8;
-}
-
-.summary-label {
-  font-size: 12px;
-  color: #6c757d;
-  margin-bottom: 5px;
-}
-
-.summary-number {
-  font-size: 28px;
-  font-weight: 700;
-  color: #1e3c72;
-}
-
-.summary-card.present .summary-number {
-  color: #28a745;
-}
-
-.summary-card.late .summary-number {
-  color: #ffc107;
-}
-
-.summary-card.absent .summary-number {
-  color: #dc3545;
-}
-
-.summary-card.truant .summary-number {
-  color: #17a2b8;
-}
-        
 /* Responsive */
 @media (max-width: 600px) {
   .modal-container {
@@ -958,19 +826,11 @@ form {
                 <div class="form-group">
                     <label>หน่วย/ระดับชั้น *</label>
                     <select name="grade" required>
-    <option value="">-- เลือกระดับชั้น --</option>
-    <option value="ป.1">ป.1</option>
-    <option value="ป.2">ป.2</option>
-    <option value="ป.3/1">ป.3/1</option>
-    <option value="ป.3/2">ป.3/2</option>
-    <option value="ป.4/1">ป.4/1</option>
-    <option value="ป.4/2">ป.4/2</option>
-    <option value="ป.5/1">ป.5/1</option>
-    <option value="ป.5/2">ป.5/2</option>
-    <option value="ป.6/1">ป.6/1</option>
-    <option value="ป.6/2">ป.6/2</option>
-    <option value="ป.6/3">ป.6/3</option>
-</select>
+                        <option value="">-- เลือกระดับชั้น --</option>
+                        <option value="ม.1">มัธยมศึกษาปีที่ 1</option>
+                        <option value="ม.2">มัธยมศึกษาปีที่ 2</option>
+                        <option value="ม.3">มัธยมศึกษาปีที่ 3</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>ชื่อกิจกรรม *</label>
@@ -1012,41 +872,19 @@ form {
                     </div>
                 </div>
                 <div class="form-group">
-    <label style="color: #1e3c72; font-weight: 700; font-size: 16px;">เช็คชื่อนักเรียน</label>
-    <table class="attendance-table-enhanced">
-        <thead>
-            <tr>
-                <th style="width: 50px;">ลำดับ</th>
-                <th>ชื่อ-นามสกุล</th>
-                <th style="width: 200px; text-align: center;">สถานะ</th>
-            </tr>
-        </thead>
-        <tbody id="attendanceListEnhanced"></tbody>
-    </table>
-    <div class="attendance-summary">
-        <div class="summary-card present">
-            <div class="summary-label">มา</div>
-            <div class="summary-number" id="summaryPresent">0</div>
-        </div>
-        <div class="summary-card late">
-            <div class="summary-label">ลา</div>
-            <div class="summary-number" id="summaryLate">0</div>
-        </div>
-        <div class="summary-card absent">
-            <div class="summary-label">ขาด</div>
-            <div class="summary-number" id="summaryAbsent">0</div>
-        </div>
-        <div class="summary-card truant">
-            <div class="summary-label">โดด</div>
-            <div class="summary-number" id="summaryTruant">0</div>
-        </div>
-        <div class="summary-card" style="border-left-color: #6c757d;">
-            <div class="summary-label">รวมทั้งหมด</div>
-            <div class="summary-number" style="color: #6c757d;" id="summaryTotal">0</div>
-        </div>
-    </div>
-</div>
-                
+                    <label>เช็คชื่อนักเรียน</label>
+                    <table class="attendance-table">
+                        <thead>
+                            <tr>
+                                <th>เลขที่</th>
+                                <th>ชื่อ-นามสกุล</th>
+                                <th style="text-align: center;">มา</th>
+                                <th style="text-align: center;">ขาด</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendanceList"></tbody>
+                    </table>
+                </div>
                 <div class="form-group">
                     <label>ผู้รายงาน *</label>
                     <input type="text" name="reporter" required placeholder="ชื่อครูผู้รายงาน">
@@ -1084,19 +922,11 @@ form {
         <div class="form-group">
           <label>ระดับชั้น *</label>
           <select id="studentGrade" required>
-    <option value="">-- เลือกระดับชั้น --</option>
-    <option value="ป.1">ป.1</option>
-    <option value="ป.2">ป.2</option>
-    <option value="ป.3/1">ป.3/1</option>
-    <option value="ป.3/2">ป.3/2</option>
-    <option value="ป.4/1">ป.4/1</option>
-    <option value="ป.4/2">ป.4/2</option>
-    <option value="ป.5/1">ป.5/1</option>
-    <option value="ป.5/2">ป.5/2</option>
-    <option value="ป.6/1">ป.6/1</option>
-    <option value="ป.6/2">ป.6/2</option>
-    <option value="ป.6/3">ป.6/3</option>
-</select>
+            <option value="">-- เลือกระดับชั้น --</option>
+            <option value="ม.1">มัธยมศึกษาปีที่ 1</option>
+            <option value="ม.2">มัธยมศึกษาปีที่ 2</option>
+            <option value="ม.3">มัธยมศึกษาปีที่ 3</option>
+          </select>
         </div>
         
         <div class="form-group">
@@ -1443,7 +1273,7 @@ setInterval(() => {
   loadData();
 }, 10 * 60 * 1000);
 
-        const API_URL = 'https://script.google.com/macros/s/AKfycbweRN1872RmcZiHo4tnFKyuYMnuFsZ9vSbMe_ocwaJCf0pjmmx5KtJKchOKcsoOB4uv3w/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxEpNzLlhaXsfSkMqRPX4dqHMPWLa4yn5WyKXMGAE8jx-swshKfIh8BaMPgk17a1gim/exec';
         
         let studentsData = [];
         let activitiesData = [];
@@ -1467,36 +1297,7 @@ setInterval(() => {
         // Modal Functions
         function openActivityForm() {
             document.getElementById('activityModal').classList.add('active');
-            function loadStudentsForAttendance() {
-    const html = studentsData.map((s, i) => `
-        <tr>
-            <td style="text-align: center;">${i + 1}</td>
-            <td>${s.name}</td>
-            <td>
-                <div class="attendance-status">
-                    <label class="status-radio">
-                        <input type="radio" name="attendance_${s.id}" value="present" checked onchange="updateSummary()">
-                        <span class="status-label status-present">มา</span>
-                    </label>
-                    <label class="status-radio">
-                        <input type="radio" name="attendance_${s.id}" value="late" onchange="updateSummary()">
-                        <span class="status-label status-late">ลา</span>
-                    </label>
-                    <label class="status-radio">
-                        <input type="radio" name="attendance_${s.id}" value="absent" onchange="updateSummary()">
-                        <span class="status-label status-absent">ขาด</span>
-                    </label>
-                    <label class="status-radio">
-                        <input type="radio" name="attendance_${s.id}" value="truant" onchange="updateSummary()">
-                        <span class="status-label status-truant">โดด</span>
-                    </label>
-                </div>
-            </td>
-        </tr>
-    `).join('');
-    document.getElementById('attendanceListEnhanced').innerHTML = html;
-    updateSummary();
-}
+            loadStudentsForAttendance();
             loadTeachersForSelect();
         }
 
@@ -1797,34 +1598,22 @@ setInterval(() => {
             document.getElementById('teacherList').innerHTML = html || '<p style="color: #6c757d; text-align: center; padding: 40px;">ยังไม่มีข้อมูลผู้กำกับ</p>';
         }
 
-              <td style="text-align: center; font-weight: 600;">${index + 1}</td>
-      <td>${student.name}</td>
-      <td>
-        <div class="attendance-status">
-          <label class="status-radio">
-            <input type="radio" name="attendance_${student.id}" value="present" checked onchange="updateSummary()">
-            <span class="status-label status-present">มา</span>
-          </label>
-          <label class="status-radio">
-            <input type="radio" name="attendance_${student.id}" value="late" onchange="updateSummary()">
-            <span class="status-label status-late">ลา</span>
-          </label>
-          <label class="status-radio">
-            <input type="radio" name="attendance_${student.id}" value="absent" onchange="updateSummary()">
-            <span class="status-label status-absent">ขาด</span>
-          </label>
-          <label class="status-radio">
-            <input type="radio" name="attendance_${student.id}" value="truant" onchange="updateSummary()">
-            <span class="status-label status-truant">โดด</span>
-          </label>
-        </div>
-      </td>
-    </tr>
-  `).join('');
+        function loadStudentsForAttendance() {
+            const html = studentsData.map((student, index) => `
+                <tr>
+                    <td>${student.number}</td>
+                    <td>${student.name}</td>
+                    <td style="text-align: center;">
+                        <input type="radio" name="attendance_${student.id}" value="present" checked>
+                    </td>
+                    <td style="text-align: center;">
+                        <input type="radio" name="attendance_${student.id}" value="absent">
+                    </td>
+                </tr>
+            `).join('');
 
-  document.getElementById('attendanceListEnhanced').innerHTML = html;
-  updateSummary();
-}
+            document.getElementById('attendanceList').innerHTML = html;
+        }
 
         function loadTeachersForSelect() {
             const html = '<option value="">-- เลือกผู้กำกับ --</option>' + 
@@ -1853,8 +1642,7 @@ setInterval(() => {
             const attendance = [];
             
             studentsData.forEach(student => {
-                const selected = document.querySelector(`input[name="attendance_${student.id}"]:checked`);
-                const status = selected ? selected.value : 'present';
+                const status = document.querySelector(`input[name="attendance_${student.id}"]:checked`).value;
                 attendance.push({
                     studentId: student.id,
                     studentName: student.name,
@@ -1962,100 +1750,6 @@ setInterval(() => {
             window.open(`${API_URL}?action=generatePDF&activityId=${activityId}`, '_blank');
         }
 
-        // ===== อัปเดตสรุปผล =====
-function updateSummary() {
-  let present = 0, late = 0, absent = 0, truant = 0;
-
-  studentsData.forEach(student => {
-    const selected = document.querySelector(`input[name="attendance_${student.id}"]:checked`);
-    if (selected) {
-      const status = selected.value;
-      if (status === 'present') present++;
-      else if (status === 'late') late++;
-      else if (status === 'absent') absent++;
-      else if (status === 'truant') truant++;
-    }
-  });
-
-  const total = present + late + absent + truant;
-
-  document.getElementById('summaryPresent').textContent = present;
-  document.getElementById('summaryLate').textContent = late;
-  document.getElementById('summaryAbsent').textContent = absent;
-  document.getElementById('summaryTruant').textContent = truant;
-  document.getElementById('summaryTotal').textContent = total;
-}
-        
-        // ===== ข้อมูลผู้กำกับลูกเสือที่ต้องเพิ่มเข้าในระบบ =====
-
-const initialTeachers = [
-    { name: 'นางประทุม  มหาวงศ์นันท์', email: '', phone: '' },
-    { name: 'นางสาวภัทราภรณ์  ศรีวิไชย', email: '', phone: '' },
-    { name: 'นางสาวสุกัญญา  แก้วกล้า', email: '', phone: '' },
-    { name: 'นายสิรภพ  หวั่นท๊อป', email: '', phone: '' },
-    { name: 'นางอมรรัตน์  พันธุเวช', email: '', phone: '' },
-    { name: 'นางคัทลิญา  ใจบุญ', email: '', phone: '' },
-    { name: 'นางสาวกุลศศิพร ธนาพรวิวัฏ', email: '', phone: '' },
-    { name: 'นายกฤษ   เชาว์ชอบ', email: '', phone: '' },
-    { name: 'นายกฤษณ์  โสภาการเวก', email: '', phone: '' },
-    { name: 'นายสิงห์  สุจันทร์', email: '', phone: '' },
-    { name: 'นายเสกสรร สุนันท์', email: '', phone: '' },
-    { name: 'นายสรศักดิ์  หงษ์สามสิบหก', email: '', phone: '' },
-    { name: 'นางสุรารักษ์  เทียมนโรดม', email: '', phone: '' },
-    { name: 'นายพนมกร   โปธิ', email: '', phone: '' },
-    { name: 'นางสาวสิริลักษณ์  กล่ำทอง', email: '', phone: '' },
-    { name: 'นางสาวพรรณภา   เชียงพฤกษ์', email: '', phone: '' },
-    { name: 'นายนฤเบศ  ดอนทอง', email: '', phone: '' },
-    { name: 'นางปณิตา  ปัญญานะ', email: '', phone: '', role: 'ผู้ตรวจรายงาน' },
-    { name: 'นางสาวทิพย์รัตน์  กาวี', email: '', phone: '' },
-    { name: 'นางสาวพิกุลทอง  บุญประสิทธิ์', email: '', phone: '' },
-    { name: 'นายภานุวัฒน์  พัฒนา', email: '', phone: '' },
-    { name: 'นางสาวกนกวรรณ  ปิจดี', email: '', phone: '' },
-    { name: 'นายสมบูรณ์  ใยดี', email: '', phone: '' },
-    { name: 'นางจีรวรรณ จีนะ', email: '', phone: '' },
-    { name: 'นางภิรญา  สอนศิริ', email: '', phone: '', role: 'รองผู้อำนวยการกลุ่มบริหารวิชาการ' }
-];
-
-// ===== ฟังก์ชันเพิ่มผู้กำกับทั้งหมด =====
-async function initializeTeachers() {
-    console.log('🔄 เริ่มเพิ่มผู้กำกับลูกเสือ...');
-    
-    for (const teacher of initialTeachers) {
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                body: JSON.stringify({
-                    action: 'addTeacher',
-                    id: 'TCH_' + teacher.name.replace(/\s+/g, '_') + '_' + Date.now(),
-                    name: teacher.name.trim(),
-                    email: teacher.email || '',
-                    phone: teacher.phone || ''
-                })
-            });
-
-            const result = await response.json();
-            if (result.success) {
-                console.log('✅ เพิ่มสำเร็จ:', teacher.name);
-            } else {
-                console.log('⚠️ ข้อผิดพลาด:', teacher.name, result.message);
-            }
-        } catch (error) {
-            console.error('❌ Error adding teacher:', teacher.name, error);
-        }
-        
-        // Delay 500ms เพื่อหลีกเลี่ยง rate limit
-        await new Promise(resolve => setTimeout(resolve, 500));
-    }
-    
-    console.log('🎉 เพิ่มผู้กำกับเสร็จสิ้น');
-    dataCache.clear();
-    await loadData();
-    loadTeachers();
-}
-
-// เรียกฟังก์ชันนี้เมื่อต้องการเพิ่มผู้กำกับทั้งหมด
-// initializeTeachers();
-        
         // Initialize
         window.onload = function() {
             loadData();
@@ -2285,7 +1979,7 @@ document.querySelectorAll('.modal-overlay').forEach(modal => {
     }
   });
 });
-
+        
     </script>
 </body>
 </html>
