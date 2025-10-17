@@ -989,29 +989,90 @@
             }
         });
     }
-
+    
     const imageBoxes = (activity.images && activity.images.length > 0)
         ? activity.images.map(imgSrc => `<div class="photo-box"><img src="${imgSrc}" alt="Activity Photo"></div>`).join('')
-        : Array(4).fill('<div class="photo-box empty"></div>').join('');
+        : Array(4).fill('<div class="photo-box empty"><span style="color: #999; font-size: 12px;">ไม่มีรูปภาพ</span></div>').join('');
 
     const printHtml = `
-        <!DOCTYPE html><html lang="th"><head><meta charset="UTF-8"><title>รายงานกิจกรรม</title>
+        <!DOCTYPE html><html lang="th"><head><meta charset="UTF-8"><title>รายงานการปฏิบัติกิจกรรมของลูกเสือ - ${activity.name}</title>
         <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
         <style>
-            body { font-family: 'Sarabun', sans-serif; font-size: 14px; margin: 2cm; }
-            .header, .signatures { text-align: center; }
-            .header h1 { font-size: 18px; margin: 0; }
-            .header h2 { font-size: 16px; margin: 0; font-weight: normal; }
-            .content { margin-top: 1.5cm; }
-            .field { margin-bottom: 0.5cm; }
-            .field-label { display: inline-block; width: 150px; font-weight: bold; }
-            .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5cm; margin-top: 1cm; page-break-inside: avoid; }
-            .photo-box { border: 1px solid #000; height: 5cm; display: flex; align-items: center; justify-content: center; }
+            @page {
+                size: A4;
+                margin: 1.5cm;
+            }
+            body { 
+                font-family: 'Sarabun', sans-serif; 
+                font-size: 14px; 
+                line-height: 1.6;
+            }
+            .header, .signatures-section { text-align: center; }
+            .header h1 { font-size: 18px; margin: 0; font-weight: 700; }
+            .header h2 { font-size: 16px; margin: 5px 0 0 0; font-weight: normal; }
+            .content { margin-top: 1cm; }
+            .field { 
+                margin-bottom: 0.4cm; 
+                display: flex;
+                border-bottom: 1px dotted #ccc;
+                padding-bottom: 4px;
+            }
+            .field-label { 
+                display: inline-block; 
+                width: 150px; 
+                font-weight: 700;
+                flex-shrink: 0;
+            }
+            .field-value {
+                display: inline-block;
+            }
+            .photo-section-header {
+                font-weight: 700;
+                font-size: 16px;
+                margin-top: 0.8cm;
+                margin-bottom: 0.4cm;
+            }
+            .photo-grid { 
+                display: grid; 
+                grid-template-columns: 1fr 1fr; 
+                gap: 0.5cm; 
+                page-break-inside: avoid; 
+            }
+            .photo-box { 
+                border: 1px solid #000; 
+                height: 4.5cm; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                overflow: hidden;
+            }
             .photo-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
-            .signatures { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1cm; margin-top: 2cm; page-break-inside: avoid; }
-            .sig-box { display: flex; flex-direction: column; justify-content: flex-end; height: 3cm; }
-            .line { border-bottom: 1px dotted #000; margin-bottom: 5px; }
-            @media print { body { margin: 1.5cm; } }
+            
+            .signatures-section { 
+                display: grid; 
+                grid-template-columns: 1fr 1fr 1fr; 
+                gap: 1cm; 
+                margin-top: 1.5cm; 
+                page-break-inside: avoid; 
+            }
+            .sig-box { 
+                display: flex; 
+                flex-direction: column; 
+                justify-content: flex-end; 
+                height: 3cm; /* Adjusted height */
+            }
+            .line { 
+                border-bottom: 1px dotted #000; 
+                margin-bottom: 5px; 
+                font-size: 12px; /* To hold space for signature */
+                color: transparent;
+            }
+            .sig-name { font-weight: normal; }
+            .sig-title { font-size: 12px; }
+
+            @media print {
+                body { margin: 0; }
+            }
         </style>
         </head><body>
             <div class="header">
@@ -1019,31 +1080,32 @@
                 <h2>โรงเรียนราชประชานุเคราะห์ ๕๖</h2>
             </div>
             <div class="content">
-                <div class="field"><span class="field-label">วันที่จัดกิจกรรม:</span> ${new Date(activity.date).toLocaleDateString('th-TH')}</div>
-                <div class="field"><span class="field-label">ระดับชั้น:</span> ${activity.grade}</div>
-                <div class="field"><span class="field-label">ชื่อกิจกรรม:</span> ${activity.name}</div>
-                <div class="field"><span class="field-label">รายละเอียดกิจกรรม:</span> ${activity.description}</div>
-                <div class="field"><span class="field-label">สถานที่จัดกิจกรรม:</span> ${activity.location}</div>
-                <div class="field"><span class="field-label">ผู้รับผิดชอบ:</span> ${activity.responsible}</div>
-                <div class="field"><span class="field-label">สรุปการเข้าร่วม:</span> นักเรียน ${total} คน (มา ${present}, ลา ${leave}, ขาด ${absent}, โดด ${skip})</div>
-                <div class="field" style="margin-top: 1cm; font-weight:bold;">ภาคกิจกรรม:</div>
+                <div class="field"><span class="field-label">วันที่จัดกิจกรรม:</span> <span class="field-value">${new Date(activity.date).toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' })}</span></div>
+                <div class="field"><span class="field-label">ระดับชั้น:</span> <span class="field-value">${activity.grade}</span></div>
+                <div class="field"><span class="field-label">ชื่อกิจกรรม:</span> <span class="field-value">${activity.name}</span></div>
+                <div class="field"><span class="field-label">รายละเอียดกิจกรรม:</span> <span class="field-value">${activity.description}</span></div>
+                <div class="field"><span class="field-label">สถานที่จัดกิจกรรม:</span> <span class="field-value">${activity.location}</span></div>
+                <div class="field"><span class="field-label">ผู้รับผิดชอบ:</span> <span class="field-value">${activity.responsible}</span></div>
+                <div class="field"><span class="field-label">สรุปการเข้าร่วม:</span> <span class="field-value">นักเรียน ${total} คน (มา ${present}, ลา ${leave}, ขาด ${absent}, โดด ${skip})</span></div>
+                
+                <div class="photo-section-header">ภาคกิจกรรม:</div>
                 <div class="photo-grid">${imageBoxes}</div>
             </div>
-            <div class="signatures">
+            <div class="signatures-section">
                 <div class="sig-box">
-                    <div class="line"></div>
-                    <div>( ${activity.reporter || '...................................'} )</div>
-                    <div>ผู้รายงาน</div>
+                    <div class="line">ลงชื่อ</div>
+                    <div class="sig-name">( ${activity.reporter || '...................................'} )</div>
+                    <div class="sig-title">ผู้รายงาน</div>
                 </div>
                 <div class="sig-box">
-                    <div class="line"></div>
-                    <div>( ${activity.checker || '...................................'} )</div>
-                    <div>ผู้ตรวจสอบ</div>
+                    <div class="line">ลงชื่อ</div>
+                    <div class="sig-name">( ${activity.checker || 'นางปณิตา ปัญญานะ'} )</div>
+                    <div class="sig-title">ผู้ตรวจสอบ</div>
                 </div>
                 <div class="sig-box">
-                    <div class="line"></div>
-                    <div>( ${activity.approver || '...................................'} )</div>
-                    <div>ผู้อนุมัติ</div>
+                    <div class="line">ลงชื่อ</div>
+                    <div class="sig-name">( ${activity.approver || 'นางภิรญา สอนศิริ'} )</div>
+                    <div class="sig-title">รองผู้อำนวยการสถานศึกษา</div>
                 </div>
             </div>
         </body></html>`;
@@ -1051,7 +1113,10 @@
     const printWindow = window.open('', '_blank');
     printWindow.document.write(printHtml);
     printWindow.document.close();
-    printWindow.onload = () => { printWindow.print(); };
+    printWindow.onload = () => { 
+        printWindow.focus(); // A small helper for some browsers
+        printWindow.print(); 
+    };
 }
     function renderApprovalSection(activity) {
     let checkerHtml, approverHtml, printButton = '';
