@@ -308,20 +308,16 @@
             overflow-y: auto;
         }
 
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #e9ecef;
-        }
+        /* Modal Header ปรับสี */
+.modal-header {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  color: white !important;
+}
 
-        .modal-header h2 {
-            font-size: 24px;
-            color: #1e3c72;
-        }
-
+.modal-header h2 {
+  color: white !important;
+  font-weight: 700 !important;
+}
         .close-btn {
             background: none;
             border: none;
@@ -879,20 +875,142 @@ form {
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>เช็คชื่อนักเรียน</label>
-                    <table class="attendance-table">
-                        <thead>
-                            <tr>
-                                <th>เลขที่</th>
-                                <th>ชื่อ-นามสกุล</th>
-                                <th style="text-align: center;">มา</th>
-                                <th style="text-align: center;">ขาด</th>
-                            </tr>
-                        </thead>
-                        <tbody id="attendanceList"></tbody>
-                    </table>
-                </div>
+                /* Attendance Table ปรับปรุง */
+.attendance-table-enhanced {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  background: white;
+}
+
+.attendance-table-enhanced th {
+  background: #1e3c72;
+  color: white;
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.attendance-table-enhanced td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.attendance-table-enhanced tr:hover {
+  background: #f8f9fa;
+}
+
+/* Status Badge */
+.attendance-status {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.status-radio {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.status-radio input[type="radio"] {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+}
+
+.status-label {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  min-width: 45px;
+  text-align: center;
+}
+
+.status-present {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-late {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-absent {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.status-truant {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+/* Summary Section */
+.attendance-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.summary-card {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  border-left: 4px solid #1e3c72;
+}
+
+.summary-card.present {
+  border-left-color: #28a745;
+}
+
+.summary-card.late {
+  border-left-color: #ffc107;
+}
+
+.summary-card.absent {
+  border-left-color: #dc3545;
+}
+
+.summary-card.truant {
+  border-left-color: #17a2b8;
+}
+
+.summary-label {
+  font-size: 12px;
+  color: #6c757d;
+  margin-bottom: 5px;
+}
+
+.summary-number {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e3c72;
+}
+
+.summary-card.present .summary-number {
+  color: #28a745;
+}
+
+.summary-card.late .summary-number {
+  color: #ffc107;
+}
+
+.summary-card.absent .summary-number {
+  color: #dc3545;
+}
+
+.summary-card.truant .summary-number {
+  color: #17a2b8;
+}
                 <div class="form-group">
                     <label>ผู้รายงาน *</label>
                     <input type="text" name="reporter" required placeholder="ชื่อครูผู้รายงาน">
@@ -1614,22 +1732,34 @@ setInterval(() => {
             document.getElementById('teacherList').innerHTML = html || '<p style="color: #6c757d; text-align: center; padding: 40px;">ยังไม่มีข้อมูลผู้กำกับ</p>';
         }
 
-        function loadStudentsForAttendance() {
-            const html = studentsData.map((student, index) => `
-                <tr>
-                    <td>${student.number}</td>
-                    <td>${student.name}</td>
-                    <td style="text-align: center;">
-                        <input type="radio" name="attendance_${student.id}" value="present" checked>
-                    </td>
-                    <td style="text-align: center;">
-                        <input type="radio" name="attendance_${student.id}" value="absent">
-                    </td>
-                </tr>
-            `).join('');
+              <td style="text-align: center; font-weight: 600;">${index + 1}</td>
+      <td>${student.name}</td>
+      <td>
+        <div class="attendance-status">
+          <label class="status-radio">
+            <input type="radio" name="attendance_${student.id}" value="present" checked onchange="updateSummary()">
+            <span class="status-label status-present">มา</span>
+          </label>
+          <label class="status-radio">
+            <input type="radio" name="attendance_${student.id}" value="late" onchange="updateSummary()">
+            <span class="status-label status-late">ลา</span>
+          </label>
+          <label class="status-radio">
+            <input type="radio" name="attendance_${student.id}" value="absent" onchange="updateSummary()">
+            <span class="status-label status-absent">ขาด</span>
+          </label>
+          <label class="status-radio">
+            <input type="radio" name="attendance_${student.id}" value="truant" onchange="updateSummary()">
+            <span class="status-label status-truant">โดด</span>
+          </label>
+        </div>
+      </td>
+    </tr>
+  `).join('');
 
-            document.getElementById('attendanceList').innerHTML = html;
-        }
+  document.getElementById('attendanceListEnhanced').innerHTML = html;
+  updateSummary();
+}
 
         function loadTeachersForSelect() {
             const html = '<option value="">-- เลือกผู้กำกับ --</option>' + 
@@ -1658,7 +1788,8 @@ setInterval(() => {
             const attendance = [];
             
             studentsData.forEach(student => {
-                const status = document.querySelector(`input[name="attendance_${student.id}"]:checked`).value;
+                const selected = document.querySelector(`input[name="attendance_${student.id}"]:checked`);
+                const status = selected ? selected.value : 'present';
                 attendance.push({
                     studentId: student.id,
                     studentName: student.name,
@@ -1766,6 +1897,30 @@ setInterval(() => {
             window.open(`${API_URL}?action=generatePDF&activityId=${activityId}`, '_blank');
         }
 
+        // ===== อัปเดตสรุปผล =====
+function updateSummary() {
+  let present = 0, late = 0, absent = 0, truant = 0;
+
+  studentsData.forEach(student => {
+    const selected = document.querySelector(`input[name="attendance_${student.id}"]:checked`);
+    if (selected) {
+      const status = selected.value;
+      if (status === 'present') present++;
+      else if (status === 'late') late++;
+      else if (status === 'absent') absent++;
+      else if (status === 'truant') truant++;
+    }
+  });
+
+  const total = present + late + absent + truant;
+
+  document.getElementById('summaryPresent').textContent = present;
+  document.getElementById('summaryLate').textContent = late;
+  document.getElementById('summaryAbsent').textContent = absent;
+  document.getElementById('summaryTruant').textContent = truant;
+  document.getElementById('summaryTotal').textContent = total;
+}
+        
         // ===== ข้อมูลผู้กำกับลูกเสือที่ต้องเพิ่มเข้าในระบบ =====
 
 const initialTeachers = [
