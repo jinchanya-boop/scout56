@@ -931,96 +931,194 @@
     // Detail View & Approval Section
     // ========================================
     function viewActivityDetail(activityId) {
-        const activity = activitiesData.find(a => a.id === activityId);
-        if (!activity) { alert('ไม่พบกิจกรรมนี้'); return; }
-        let total = 0, present = 0, leave = 0, absent = 0, skip = 0;
-        if (activity.attendance) {
-            total = activity.attendance.length;
-            activity.attendance.forEach(r => {
-                if (r.status === 'present') present++; else if (r.status === 'leave') leave++;
-                else if (r.status === 'absent') absent++; else if (r.status === 'skip') skip++;
-            });
-        }
-        const content = `
-            <div class="info-card">
-                <h3>📝 ข้อมูลกิจกรรม</h3>
-                <div class="info-grid">
-                    <div><strong>📅 วันที่:</strong> <span>${new Date(activity.date).toLocaleDateString('th-TH')}</span></div>
-                    <div><strong>🎯 ระดับชั้น:</strong> <span>${activity.grade}</span></div>
-                    <div><strong>📍 สถานที่:</strong> <span>${activity.location}</span></div>
-                    <div><strong>👤 ผู้รับผิดชอบ:</strong> <span>${activity.responsible}</span></div>
-                    <div><strong>📝 ผู้รายงาน:</strong> <span>${activity.reporter || '-'}</span></div>
-                    <div><strong>⏰ เวลาส่งรายงาน:</strong> <span>${new Date(parseInt(activity.id.split('_')[1])).toLocaleString('th-TH')}</span></div>
-                </div>
-                <div style="margin-top: 15px;"><strong>📋 รายละเอียดกิจกรรม:</strong><div class="description-box">${activity.description}</div></div>
-            </div>
-            <div class="info-card">
-                <h3>📊 สถิติการเข้าร่วม</h3>
-                <div class="attendance-stats">
-                    <div class="stat-item"><div class="number" style="color: #1e3c72;">${total}</div><div class="label">ทั้งหมด</div></div>
-                    <div class="stat-item"><div class="number" style="color: #28a745;">${present}</div><div class="label">มา</div></div>
-                    <div class="stat-item"><div class="number" style="color: #ffc107;">${leave}</div><div class="label">ลา</div></div>
-                    <div class="stat-item"><div class="number" style="color: #dc3545;">${absent}</div><div class="label">ขาด</div></div>
-                    <div class="stat-item"><div class="number" style="color: #e83e8c;">${skip}</div><div class="label">โดด</div></div>
-                </div>
-            </div>
-             <div class="info-card">
-                <h3>👥 รายชื่อผู้เข้าร่วม</h3>
-                <div class="data-table-container" style="max-height: 300px; overflow-y: auto;">
-                    <table class="data-table">
-                     <thead><tr><th>ลำดับ</th><th>ชื่อ-นามสกุล</th><th class="text-center">สถานะ</th></tr></thead>
-                     <tbody>
-                        ${activity.attendance && activity.attendance.length > 0 ? activity.attendance.map((a, idx) => `
-                            <tr>
-                                <td>${idx + 1}</td> <td>${a.studentName || 'ไม่ทราบชื่อ'}</td>
-                                <td class="text-center" style="font-weight: bold; color: ${ a.status === 'present' ? '#28a745' : a.status === 'leave' ? '#ffc107' : a.status === 'absent' ? '#dc3545' : '#e83e8c' };">
-                                ${ a.status === 'present' ? 'มา' : a.status === 'leave' ? 'ลา' : a.status === 'absent' ? 'ขาด' : 'โดด' }
-                                </td>
-                            </tr>`).join('') : '<tr><td colspan="3" class="loading-placeholder">ไม่มีข้อมูล</td></tr>'}
-                     </tbody>
-                    </table>
-                </div>
-            </div>
-             <div class="info-card"><h3>สถานะการดำเนินการ</h3>${renderApprovalSection(activity)}</div>`;
-        createModal(`activityDetail_${activity.id}`, `รายละเอียดกิจกรรม: ${activity.name}`, content);
+    const activity = activitiesData.find(a => a.id === activityId);
+    if (!activity) { alert('ไม่พบกิจกรรมนี้'); return; }
+    
+    let total = 0, present = 0, leave = 0, absent = 0, skip = 0;
+    if (activity.attendance) {
+        total = activity.attendance.length;
+        activity.attendance.forEach(r => {
+            if (r.status === 'present') present++; else if (r.status === 'leave') leave++;
+            else if (r.status === 'absent') absent++; else if (r.status === 'skip') skip++;
+        });
     }
 
+    const imagesHtml = (activity.images && activity.images.length > 0) 
+        ? `<div class="image-upload-grid">${activity.images.map(imgSrc => `<div><img src="${imgSrc}" style="width:100%; height: auto; border-radius: 8px; border: 1px solid #ddd;"></div>`).join('')}</div>`
+        : '<p>ไม่มีรูปภาพสำหรับกิจกรรมนี้</p>';
+
+    const content = `
+        <div class="info-card">
+            <h3>📝 ข้อมูลกิจกรรม</h3>
+            <div class="info-grid">
+                <div><strong>📅 วันที่:</strong> <span>${new Date(activity.date).toLocaleDateString('th-TH')}</span></div>
+                <div><strong>🎯 ระดับชั้น:</strong> <span>${activity.grade}</span></div>
+                <div><strong>📍 สถานที่:</strong> <span>${activity.location}</span></div>
+                <div><strong>👤 ผู้รับผิดชอบ:</strong> <span>${activity.responsible}</span></div>
+                <div><strong>📝 ผู้รายงาน:</strong> <span>${activity.reporter || '-'}</span></div>
+                <div><strong>⏰ เวลาส่งรายงาน:</strong> <span>${new Date(parseInt(activity.id.split('_')[1])).toLocaleString('th-TH')}</span></div>
+            </div>
+            <div style="margin-top: 15px;"><strong>📋 รายละเอียดกิจกรรม:</strong><div class="description-box">${activity.description}</div></div>
+        </div>
+        <div class="info-card"><h3>📷 ภาคกิจกรรม</h3>${imagesHtml}</div>
+        <div class="info-card">
+            <h3>📊 สถิติการเข้าร่วม</h3>
+            <div class="attendance-stats">
+                <div class="stat-item"><div class="number" style="color: #1e3c72;">${total}</div><div class="label">ทั้งหมด</div></div>
+                <div class="stat-item"><div class="number" style="color: #28a745;">${present}</div><div class="label">มา</div></div>
+                <div class="stat-item"><div class="number" style="color: #ffc107;">${leave}</div><div class="label">ลา</div></div>
+                <div class="stat-item"><div class="number" style="color: #dc3545;">${absent}</div><div class="label">ขาด</div></div>
+                <div class="stat-item"><div class="number" style="color: #e83e8c;">${skip}</div><div class="label">โดด</div></div>
+            </div>
+        </div>
+         <div class="info-card"><h3>สถานะการดำเนินการ</h3>${renderApprovalSection(activity)}</div>`;
+    createModal(`activityDetail_${activity.id}`, `รายละเอียดกิจกรรม: ${activity.name}`, content);
+}
+
+    function generatePDFReport(activityId) {
+    const activity = activitiesData.find(a => a.id === activityId);
+    if (!activity) { return alert('ไม่พบข้อมูลกิจกรรม'); }
+
+    let total = 0, present = 0, absent = 0, leave = 0, skip = 0;
+    if (activity.attendance) {
+        activity.attendance.forEach(r => {
+            total++;
+            switch(r.status) {
+                case 'present': present++; break; case 'leave': leave++; break;
+                case 'absent': absent++; break; case 'skip': skip++; break;
+            }
+        });
+    }
+
+    const imageBoxes = (activity.images && activity.images.length > 0)
+        ? activity.images.map(imgSrc => `<div class="photo-box"><img src="${imgSrc}" alt="Activity Photo"></div>`).join('')
+        : Array(4).fill('<div class="photo-box empty"></div>').join('');
+
+    const printHtml = `
+        <!DOCTYPE html><html lang="th"><head><meta charset="UTF-8"><title>รายงานกิจกรรม</title>
+        <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+        <style>
+            body { font-family: 'Sarabun', sans-serif; font-size: 14px; margin: 2cm; }
+            .header, .signatures { text-align: center; }
+            .header h1 { font-size: 18px; margin: 0; }
+            .header h2 { font-size: 16px; margin: 0; font-weight: normal; }
+            .content { margin-top: 1.5cm; }
+            .field { margin-bottom: 0.5cm; }
+            .field-label { display: inline-block; width: 150px; font-weight: bold; }
+            .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5cm; margin-top: 1cm; page-break-inside: avoid; }
+            .photo-box { border: 1px solid #000; height: 5cm; display: flex; align-items: center; justify-content: center; }
+            .photo-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
+            .signatures { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1cm; margin-top: 2cm; page-break-inside: avoid; }
+            .sig-box { display: flex; flex-direction: column; justify-content: flex-end; height: 3cm; }
+            .line { border-bottom: 1px dotted #000; margin-bottom: 5px; }
+            @media print { body { margin: 1.5cm; } }
+        </style>
+        </head><body>
+            <div class="header">
+                <h1>รายงานการปฏิบัติกิจกรรมของลูกเสือ</h1>
+                <h2>โรงเรียนราชประชานุเคราะห์ ๕๖</h2>
+            </div>
+            <div class="content">
+                <div class="field"><span class="field-label">วันที่จัดกิจกรรม:</span> ${new Date(activity.date).toLocaleDateString('th-TH')}</div>
+                <div class="field"><span class="field-label">ระดับชั้น:</span> ${activity.grade}</div>
+                <div class="field"><span class="field-label">ชื่อกิจกรรม:</span> ${activity.name}</div>
+                <div class="field"><span class="field-label">รายละเอียดกิจกรรม:</span> ${activity.description}</div>
+                <div class="field"><span class="field-label">สถานที่จัดกิจกรรม:</span> ${activity.location}</div>
+                <div class="field"><span class="field-label">ผู้รับผิดชอบ:</span> ${activity.responsible}</div>
+                <div class="field"><span class="field-label">สรุปการเข้าร่วม:</span> นักเรียน ${total} คน (มา ${present}, ลา ${leave}, ขาด ${absent}, โดด ${skip})</div>
+                <div class="field" style="margin-top: 1cm; font-weight:bold;">ภาคกิจกรรม:</div>
+                <div class="photo-grid">${imageBoxes}</div>
+            </div>
+            <div class="signatures">
+                <div class="sig-box">
+                    <div class="line"></div>
+                    <div>( ${activity.reporter || '...................................'} )</div>
+                    <div>ผู้รายงาน</div>
+                </div>
+                <div class="sig-box">
+                    <div class="line"></div>
+                    <div>( ${activity.checker || '...................................'} )</div>
+                    <div>ผู้ตรวจสอบ</div>
+                </div>
+                <div class="sig-box">
+                    <div class="line"></div>
+                    <div>( ${activity.approver || '...................................'} )</div>
+                    <div>ผู้อนุมัติ</div>
+                </div>
+            </div>
+        </body></html>`;
+
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(printHtml);
+    printWindow.document.close();
+    printWindow.onload = () => { printWindow.print(); };
+}
     function renderApprovalSection(activity) {
-        let checkerHtml, approverHtml;
-        if (!activity.checker) {
-            checkerHtml = `<div class="approval-box"><h4>✅ การตรวจสอบ (นางปณิตา ปัญญานะ)</h4><p style="color: #ffc107;"><strong>สถานะ:</strong> ⏳ รอตรวจสอบ</p><div class="form-group" style="margin-top:10px;"><input type="password" id="checkPass_${activity.id}" placeholder="รหัสผ่าน (check123)"></div><div class="form-group"><textarea id="checkComment_${activity.id}" placeholder="ความคิดเห็น (ถ้ามี)"></textarea></div><button class="btn btn-success" onclick="submitCheck('${activity.id}')">ยืนยันการตรวจสอบ</button></div>`;
-        } else {
-            checkerHtml = `<div class="approval-box"><h4>✅ การตรวจสอบ (นางปณิตา ปัญญานะ)</h4><p style="color: #28a745;"><strong>สถานะ:</strong> ✔️ ตรวจแล้ว</p><p><strong>ผู้ตรวจ:</strong> ${activity.checker}</p><p><strong>วันที่ตรวจ:</strong> ${activity.checkerDate}</p><p><strong>ความคิดเห็น:</strong> ${activity.checkerComment || 'ไม่มี'}</p></div>`;
-        }
-        if (!activity.checker) {
-            approverHtml = `<div class="approval-box"><h4 style="color:#6c757d;">🔖 การอนุมัติ (นางภิรญา สอนศิริ)</h4><p><strong>สถานะ:</strong> ⏸️ รอตรวจสอบก่อน</p></div>`;
-        } else if (!activity.approver) {
-            approverHtml = `<div class="approval-box"><h4>🔖 การอนุมัติ (นางภิรญา สอนศิริ)</h4><p style="color: #ffc107;"><strong>สถานะ:</strong> ⏳ รออนุมัติ</p><div class="form-group" style="margin-top:10px;"><input type="password" id="approvePass_${activity.id}" placeholder="รหัสผ่าน (admin999)"></div><div class="form-group"><select id="approveStatus_${activity.id}"><option value="ผ่าน">✅ ผ่าน</option><option value="ไม่ผ่าน">❌ ไม่ผ่าน</option></select></div><div class="form-group"><textarea id="approveComment_${activity.id}" placeholder="ความคิดเห็น (ถ้ามี)"></textarea></div><button class="btn btn-success" onclick="submitApproval('${activity.id}')">ยืนยันการอนุมัติ</button></div>`;
-        } else {
-            approverHtml = `<div class="approval-box"><h4>🔖 การอนุมัติ (นางภิรญา สอนศิริ)</h4><p style="color: ${activity.approvalStatus === 'ผ่าน' ? '#28a745' : '#dc3545'};"><strong>สถานะ:</strong> ${activity.approvalStatus === 'ผ่าน' ? '✔️ ผ่าน' : '❌ ไม่ผ่าน'}</p><p><strong>ผู้อนุมัติ:</strong> ${activity.approver}</p><p><strong>วันที่อนุมัติ:</strong> ${activity.approverDate}</p><p><strong>ความคิดเห็น:</strong> ${activity.approverComment || 'ไม่มี'}</p></div>`;
-        }
-        return `<div style="display:grid; grid-template-columns: 1fr; gap: 15px;  @media (min-width: 768px) { grid-template-columns: 1fr 1fr; }">${checkerHtml}${approverHtml}</div>`;
+    let checkerHtml, approverHtml, printButton = '';
+
+    if (activity.approver) {
+        printButton = `<button class="btn btn-success" style="margin-top: 10px;" onclick="generatePDFReport('${activity.id}')">🖨️ พิมพ์รายงาน PDF</button>`;
     }
 
+    if (!activity.checker) {
+        checkerHtml = `<div class="approval-box"><h4>✅ การตรวจสอบ (นางปณิตา ปัญญานะ)</h4><p style="color: #ffc107;"><strong>สถานะ:</strong> ⏳ รอตรวจสอบ</p><div class="form-group" style="margin-top:10px;"><input type="password" id="checkPass_${activity.id}" placeholder="รหัสผ่าน (check123)"></div><div class="form-group"><textarea id="checkComment_${activity.id}" placeholder="ความคิดเห็น (ถ้ามี)"></textarea></div><button class="btn btn-success" onclick="submitCheck('${activity.id}')">ยืนยันการตรวจสอบ</button></div>`;
+    } else {
+        checkerHtml = `<div class="approval-box"><h4>✅ การตรวจสอบ (นางปณิตา ปัญญานะ)</h4><p style="color: #28a745;"><strong>สถานะ:</strong> ✔️ ตรวจแล้ว</p><p><strong>ผู้ตรวจ:</strong> ${activity.checker}</p><p><strong>วันที่ตรวจ:</strong> ${activity.checkerDate}</p><p><strong>ความคิดเห็น:</strong> ${activity.checkerComment || 'ไม่มี'}</p></div>`;
+    }
+    if (!activity.checker) {
+        approverHtml = `<div class="approval-box"><h4 style="color:#6c757d;">🔖 การอนุมัติ (นางภิรญา สอนศิริ)</h4><p><strong>สถานะ:</strong> ⏸️ รอตรวจสอบก่อน</p></div>`;
+    } else if (!activity.approver) {
+        approverHtml = `<div class="approval-box"><h4>🔖 การอนุมัติ (นางภิรญา สอนศิริ)</h4><p style="color: #ffc107;"><strong>สถานะ:</strong> ⏳ รออนุมัติ</p><div class="form-group" style="margin-top:10px;"><input type="password" id="approvePass_${activity.id}" placeholder="รหัสผ่าน (admin999)"></div><div class="form-group"><select id="approveStatus_${activity.id}"><option value="ผ่าน">✅ ผ่าน</option><option value="ไม่ผ่าน">❌ ไม่ผ่าน</option></select></div><div class="form-group"><textarea id="approveComment_${activity.id}" placeholder="ความคิดเห็น (ถ้ามี)"></textarea></div><button class="btn btn-success" onclick="submitApproval('${activity.id}')">ยืนยันการอนุมัติ</button></div>`;
+    } else {
+        approverHtml = `<div class="approval-box"><h4>🔖 การอนุมัติ (นางภิรญา สอนศิริ)</h4><p style="color: ${activity.approvalStatus === 'ผ่าน' ? '#28a745' : '#dc3545'};"><strong>สถานะ:</strong> ${activity.approvalStatus === 'ผ่าน' ? '✔️ ผ่าน' : '❌ ไม่ผ่าน'}</p><p><strong>ผู้อนุมัติ:</strong> ${activity.approver}</p><p><strong>วันที่อนุมัติ:</strong> ${activity.approverDate}</p><p><strong>ความคิดเห็น:</strong> ${activity.approverComment || 'ไม่มี'}</p>${printButton}</div>`;
+    }
+    return `<div style="display:grid; grid-template-columns: 1fr; gap: 15px;  @media (min-width: 768px) { grid-template-columns: 1fr 1fr; }">${checkerHtml}${approverHtml}</div>`;
+}
     // ========================================
     // Form Modal Creation
     // ========================================
     function openActivityForm() {
-        const teacherOptions = teachersData.map(t => `<option value="${t.name}">${t.name}</option>`).join('') + '<option value="manual">กรอกด้วยตนเอง</option>';
-        const content = `
-            <form id="activityFormNew" onsubmit="submitActivityForm(event)">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;"><div class="form-group"><label>วันที่จัดกิจกรรม *</label><input type="date" name="activityDate" required value="${new Date().toISOString().split('T')[0]}"></div><div class="form-group"><label>หน่วย/ระดับชั้น *</label><select name="grade" required onchange="document.getElementById('attendanceList').innerHTML = getStudentsByGrade(this.value);"><option value="">-- เลือกระดับชั้น --</option><option value="ป.1">ประถมศึกษาปีที่ 1</option><option value="ป.2">ประถมศึกษาปีที่ 2</option><option value="ป.3/1">ประถมศึกษาปีที่ 3/1</option><option value="ป.3/2">ประถมศึกษาปีที่ 3/2</option><option value="ป.4/1">ประถมศึกษาปีที่ 4/1</option><option value="ป.4/2">ประถมศึกษาปีที่ 4/2</option><option value="ป.5/1">ประถมศึกษาปีที่ 5/1</option><option value="ป.5/2">ประถมศึกษาปีที่ 5/2</option><option value="ป.6/1">ประถมศึกษาปีที่ 6/1</option><option value="ป.6/2">ประถมศึกษาปีที่ 6/2</option><option value="ป.6/3">ประถมศึกษาปีที่ 6/3</option></select></div></div>
-                <div class="form-group"><label>ชื่อกิจกรรม *</label><input type="text" name="activityName" required placeholder="เช่น การผูกเงื่อน, การปฐมพยาบาล"></div>
-                <div class="form-group"><label>รายละเอียดกิจกรรม *</label><textarea name="description" required placeholder="อธิบายกิจกรรมโดยละเอียด"></textarea></div>
-                <div class="form-group"><label>สถานที่จัด *</label><input type="text" name="location" required placeholder="เช่น สนามโรงเรียน, ห้องประชุม"></div>
-                <div class="form-group"><label>ผู้รับผิดชอบ *</label><select name="responsible" required onchange="document.getElementById('manualResponsibleWrapper').style.display = this.value === 'manual' ? 'block' : 'none';"><option value="">-- เลือกผู้กำกับ --</option>${teacherOptions}</select><div id="manualResponsibleWrapper" style="display:none; margin-top:10px;"><input type="text" name="responsibleManual" placeholder="กรอกชื่อผู้รับผิดชอบ"></div></div>
-                <div class="form-group"><label>รูปภาพกิจกรรม (สูงสุด 4 รูป)</label><div class="image-upload-grid"><div class="image-upload-box" onclick="document.getElementById('img1').click()"><span id="img1Preview">📷 รูปที่ 1</span><input type="file" id="img1" name="img1" accept="image/*" style="display: none;" onchange="previewImage(this, 'img1Preview')"></div><div class="image-upload-box" onclick="document.getElementById('img2').click()"><span id="img2Preview">📷 รูปที่ 2</span><input type="file" id="img2" name="img2" accept="image/*" style="display: none;" onchange="previewImage(this, 'img2Preview')"></div><div class="image-upload-box" onclick="document.getElementById('img3').click()"><span id="img3Preview">📷 รูปที่ 3</span><input type="file" id="img3" name="img3" accept="image/*" style="display: none;" onchange="previewImage(this, 'img3Preview')"></div><div class="image-upload-box" onclick="document.getElementById('img4').click()"><span id="img4Preview">📷 รูปที่ 4</span><input type="file" id="img4" name="img4" accept="image/*" style="display: none;" onchange="previewImage(this, 'img4Preview')"></div></div></div>
-                <div class="form-group"><label>เช็คชื่อนักเรียน</label><div class="data-table-container" style="max-height: 350px; overflow-y: auto; border: 1px solid #e9ecef; border-radius: 8px;"><table class="data-table"><thead><tr><th class="text-center">เลขที่</th><th>ชื่อ-นามสกุล</th><th class="text-center">สถานะ</th></tr></thead><tbody id="attendanceList"><tr><td colspan="3" class="loading-placeholder">กรุณาเลือกระดับชั้นเพื่อแสดงรายชื่อ</td></tr></tbody></table></div></div>
-                <div class="form-group"><label>ผู้รายงาน *</label><input type="text" name="reporter" required placeholder="ชื่อครูผู้รายงาน"></div>
-                <div class="form-actions"><button type="button" class="btn-cancel" onclick="document.getElementById('activityFormModal').remove()">ยกเลิก</button><button type="submit" class="btn-submit">บันทึกกิจกรรม</button></div>
-            </form>`;
-        createModal('activityFormModal', 'บันทึกกิจกรรมใหม่', content);
-    }
+    const teacherOptions = teachersData.map(t => `<option value="${t.name}">${t.name}</option>`).join('') + '<option value="manual">กรอกด้วยตนเอง</option>';
+    const content = `
+        <form id="activityFormNew" onsubmit="submitActivityForm(event)">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="form-group"><label>วันที่จัดกิจกรรม *</label><input type="date" name="activityDate" required value="${new Date().toISOString().split('T')[0]}"></div>
+                <div class="form-group"><label>หน่วย/ระดับชั้น *</label><select name="grade" required onchange="document.getElementById('attendanceList').innerHTML = getStudentsByGrade(this.value);"><option value="">-- เลือกระดับชั้น --</option><option value="ป.1">ประถมศึกษาปีที่ 1</option><option value="ป.2">ประถมศึกษาปีที่ 2</option><option value="ป.3/1">ประถมศึกษาปีที่ 3/1</option><option value="ป.3/2">ประถมศึกษาปีที่ 3/2</option><option value="ป.4/1">ประถมศึกษาปีที่ 4/1</option><option value="ป.4/2">ประถมศึกษาปีที่ 4/2</option><option value="ป.5/1">ประถมศึกษาปีที่ 5/1</option><option value="ป.5/2">ประถมศึกษาปีที่ 5/2</option><option value="ป.6/1">ประถมศึกษาปีที่ 6/1</option><option value="ป.6/2">ประถมศึกษาปีที่ 6/2</option><option value="ป.6/3">ประถมศึกษาปีที่ 6/3</option></select></div>
+            </div>
+            <div class="form-group"><label>ชื่อกิจกรรม *</label><input type="text" name="activityName" required placeholder="เช่น การผูกเงื่อน, การปฐมพยาบาล"></div>
+            <div class="form-group"><label>รายละเอียดกิจกรรม *</label><textarea name="description" required placeholder="อธิบายกิจกรรมโดยละเอียด"></textarea></div>
+            <div class="form-group"><label>สถานที่จัด *</label><input type="text" name="location" required placeholder="เช่น สนามโรงเรียน, ห้องประชุม"></div>
+            <div class="form-group"><label>ผู้รับผิดชอบ *</label><select name="responsible" required onchange="document.getElementById('manualResponsibleWrapper').style.display = this.value === 'manual' ? 'block' : 'none';"><option value="">-- เลือกผู้กำกับ --</option>${teacherOptions}</select><div id="manualResponsibleWrapper" style="display:none; margin-top:10px;"><input type="text" name="responsibleManual" placeholder="กรอกชื่อผู้รับผิดชอบ"></div></div>
+            
+            <div class="form-group">
+                <label>รูปภาพกิจกรรม (สูงสุด 4 รูป)</label>
+                <div class="image-upload-grid">
+                    <div class="image-upload-box" onclick="document.getElementById('img1').click()">
+                        <span id="img1Preview">📷 รูปที่ 1</span>
+                        <input type="file" id="img1" name="img1" accept="image/*" style="display: none;" onchange="previewImage(this, 'img1Preview')">
+                    </div>
+                    <div class="image-upload-box" onclick="document.getElementById('img2').click()">
+                        <span id="img2Preview">📷 รูปที่ 2</span>
+                        <input type="file" id="img2" name="img2" accept="image/*" style="display: none;" onchange="previewImage(this, 'img2Preview')">
+                    </div>
+                    <div class="image-upload-box" onclick="document.getElementById('img3').click()">
+                        <span id="img3Preview">📷 รูปที่ 3</span>
+                        <input type="file" id="img3" name="img3" accept="image/*" style="display: none;" onchange="previewImage(this, 'img3Preview')">
+                    </div>
+                    <div class="image-upload-box" onclick="document.getElementById('img4').click()">
+                        <span id="img4Preview">📷 รูปที่ 4</span>
+                        <input type="file" id="img4" name="img4" accept="image/*" style="display: none;" onchange="previewImage(this, 'img4Preview')">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group"><label>เช็คชื่อนักเรียน</label><div class="data-table-container" style="max-height: 350px; overflow-y: auto; border: 1px solid #e9ecef; border-radius: 8px;"><table class="data-table"><thead><tr><th class="text-center">เลขที่</th><th>ชื่อ-นามสกุล</th><th class="text-center">สถานะ</th></tr></thead><tbody id="attendanceList"><tr><td colspan="3" class="loading-placeholder">กรุณาเลือกระดับชั้นเพื่อแสดงรายชื่อ</td></tr></tbody></table></div></div>
+            <div class="form-group"><label>ผู้รายงาน *</label><input type="text" name="reporter" required placeholder="ชื่อครูผู้รายงาน"></div>
+            <div class="form-actions"><button type="button" class="btn-cancel" onclick="document.getElementById('activityFormModal').remove()">ยกเลิก</button><button type="submit" class="btn-submit">บันทึกกิจกรรม</button></div>
+        </form>
+    `;
+    createModal('activityFormModal', 'บันทึกกิจกรรมใหม่', content);
+}
     
     function openStudentForm() {
         const content = `
@@ -1094,29 +1192,75 @@
         }
     }
 
-    async function submitActivityForm(event) {
-        event.preventDefault();
-        const form = event.target, formData = new FormData(form), grade = formData.get('grade');
-        if (!grade) { alert('กรุณาเลือกระดับชั้น'); return; }
-        const attendance = studentsData.filter(s => s.grade === grade).map(student => ({
-            studentId: student.id, studentName: student.name,
-            status: form.querySelector(`input[name="attendance_${student.id}"]:checked`)?.value || 'absent'
-        }));
+    // Helper function to convert file to Base64
+const fileToBase64 = file => new Promise((resolve, reject) => {
+    if (!file) {
+        resolve(null);
+        return;
+    }
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+});
+
+async function submitActivityForm(event) {
+    event.preventDefault();
+    const form = event.target;
+    const submitButton = form.querySelector('.btn-submit');
+    submitButton.disabled = true;
+    submitButton.textContent = 'กำลังบันทึก...';
+
+    try {
+        const formData = new FormData(form);
+        const grade = formData.get('grade');
+        if (!grade) {
+            alert('กรุณาเลือกระดับชั้น');
+            return;
+        }
+
+        // Handle image uploads
+        const imageFiles = [form.querySelector('#img1').files[0], form.querySelector('#img2').files[0], form.querySelector('#img3').files[0], form.querySelector('#img4').files[0]];
+        const imageBase64Strings = await Promise.all(imageFiles.map(file => fileToBase64(file)));
+
+        const attendance = studentsData
+            .filter(student => student.grade === grade)
+            .map(student => ({
+                studentId: student.id, studentName: student.name,
+                status: form.querySelector(`input[name="attendance_${student.id}"]:checked`)?.value || 'absent'
+            }));
+        
         let responsible = formData.get('responsible');
         if (responsible === 'manual') responsible = formData.get('responsibleManual').trim();
-        const activityData = {
-            id: 'ACT_' + Date.now(), date: formData.get('activityDate'), grade: grade,
-            name: formData.get('activityName').trim(), description: formData.get('description').trim(),
-            location: formData.get('location').trim(), responsible: responsible,
-            reporter: formData.get('reporter').trim(), attendance: attendance, images: []
-        };
-        if (!activityData.name || !activityData.description || !activityData.location || !activityData.responsible || !activityData.reporter) {
-            alert('กรุณากรอกข้อมูลที่มีเครื่องหมาย * ให้ครบถ้วน'); return;
-        }
-        const success = await postData('addActivity', activityData, 'บันทึกกิจกรรมสำเร็จ');
-        if (success) { document.getElementById('activityFormModal').remove(); loadData(true); }
-    }
 
+        const activityData = {
+            id: 'ACT_' + Date.now(),
+            date: formData.get('activityDate'),
+            grade: grade,
+            name: formData.get('activityName').trim(),
+            description: formData.get('description').trim(),
+            location: formData.get('location').trim(),
+            responsible: responsible,
+            reporter: formData.get('reporter').trim(),
+            attendance: attendance,
+            images: imageBase64Strings.filter(img => img !== null) // Filter out empty uploads
+        };
+
+        if (!activityData.name || !activityData.description || !activityData.location || !activityData.responsible || !activityData.reporter) {
+            alert('กรุณากรอกข้อมูลที่มีเครื่องหมาย * ให้ครบถ้วน');
+            return;
+        }
+
+        const success = await postData('addActivity', activityData, 'บันทึกกิจกรรมสำเร็จ');
+        if (success) {
+            document.getElementById('activityFormModal').remove();
+            await loadData(true);
+        }
+    } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'บันทึกกิจกรรม';
+    }
+}
     async function submitStudentForm(event) {
         event.preventDefault();
         const studentData = {
