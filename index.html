@@ -901,19 +901,19 @@
                 <div class="form-group">
                     <label>หน่วย/ระดับชั้น *</label>
                     <select name="grade" required>
-    <option value="">-- เลือกระดับชั้น --</option>
-    <option value="ป.1">ประถมศึกษาปีที่ 1</option>
-    <option value="ป.2">ประถมศึกษาปีที่ 2</option>
-    <option value="ป.3/1">ประถมศึกษาปีที่ 3/1</option>
-    <option value="ป.3/2">ประถมศึกษาปีที่ 3/2</option>
-    <option value="ป.4/1">ประถมศึกษาปีที่ 4/1</option>
-    <option value="ป.4/2">ประถมศึกษาปีที่ 4/2</option>
-    <option value="ป.5/1">ประถมศึกษาปีที่ 5/1</option>
-    <option value="ป.5/2">ประถมศึกษาปีที่ 5/2</option>
-    <option value="ป.6/1">ประถมศึกษาปีที่ 6/1</option>
-    <option value="ป.6/2">ประถมศึกษาปีที่ 6/2</option>
-    <option value="ป.6/3">ประถมศึกษาปีที่ 6/3</option>
-</select>
+                        <option value="">-- เลือกระดับชั้น --</option>
+                        <option value="ป.1">ประถมศึกษาปีที่ 1</option>
+                        <option value="ป.2">ประถมศึกษาปีที่ 2</option>
+                        <option value="ป.3/1">ประถมศึกษาปีที่ 3/1</option>
+                        <option value="ป.3/2">ประถมศึกษาปีที่ 3/2</option>
+                        <option value="ป.4/1">ประถมศึกษาปีที่ 4/1</option>
+                        <option value="ป.4/2">ประถมศึกษาปีที่ 4/2</option>
+                        <option value="ป.5/1">ประถมศึกษาปีที่ 5/1</option>
+                        <option value="ป.5/2">ประถมศึกษาปีที่ 5/2</option>
+                        <option value="ป.6/1">ประถมศึกษาปีที่ 6/1</option>
+                        <option value="ป.6/2">ประถมศึกษาปีที่ 6/2</option>
+                        <option value="ป.6/3">ประถมศึกษาปีที่ 6/3</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>ชื่อกิจกรรม *</label>
@@ -929,9 +929,12 @@
                 </div>
                 <div class="form-group">
                     <label>ผู้รับผิดชอบ *</label>
-                    <select name="responsible" required id="responsibleSelect">
-                        <option value="">-- เลือกผู้กำกับ --</option>
+                    <select name="responsible" required id="responsibleSelect" onchange="handleResponsibleChange(this)">
+                        <option value="">-- กำลังโหลดข้อมูล --</option>
                     </select>
+                    <!-- เพิ่ม input สำหรับกรอกด้วยตนเอง -->
+                    <input type="text" id="manualResponsible" style="display: none; margin-top: 10px;" 
+                           placeholder="กรอกชื่อผู้รับผิดชอบ" name="responsibleManual">
                 </div>
                 <div class="form-group">
                     <label>รูปภาพกิจกรรม (4 รูป)</label>
@@ -1033,19 +1036,19 @@
                     <div class="form-group">
                         <label>ระดับชั้น *</label>
                         <select id="studentGrade" required>
-    <option value="">-- เลือกระดับชั้น --</option>
-    <option value="ป.1">ประถมศึกษาปีที่ 1</option>
-    <option value="ป.2">ประถมศึกษาปีที่ 2</option>
-    <option value="ป.3/1">ประถมศึกษาปีที่ 3/1</option>
-    <option value="ป.3/2">ประถมศึกษาปีที่ 3/2</option>
-    <option value="ป.4/1">ประถมศึกษาปีที่ 4/1</option>
-    <option value="ป.4/2">ประถมศึกษาปีที่ 4/2</option>
-    <option value="ป.5/1">ประถมศึกษาปีที่ 5/1</option>
-    <option value="ป.5/2">ประถมศึกษาปีที่ 5/2</option>
-    <option value="ป.6/1">ประถมศึกษาปีที่ 6/1</option>
-    <option value="ป.6/2">ประถมศึกษาปีที่ 6/2</option>
-    <option value="ป.6/3">ประถมศึกษาปีที่ 6/3</option>
-</select>
+                            <option value="">-- เลือกระดับชั้น --</option>
+                            <option value="ป.1">ประถมศึกษาปีที่ 1</option>
+                            <option value="ป.2">ประถมศึกษาปีที่ 2</option>
+                            <option value="ป.3/1">ประถมศึกษาปีที่ 3/1</option>
+                            <option value="ป.3/2">ประถมศึกษาปีที่ 3/2</option>
+                            <option value="ป.4/1">ประถมศึกษาปีที่ 4/1</option>
+                            <option value="ป.4/2">ประถมศึกษาปีที่ 4/2</option>
+                            <option value="ป.5/1">ประถมศึกษาปีที่ 5/1</option>
+                            <option value="ป.5/2">ประถมศึกษาปีที่ 5/2</option>
+                            <option value="ป.6/1">ประถมศึกษาปีที่ 6/1</option>
+                            <option value="ป.6/2">ประถมศึกษาปีที่ 6/2</option>
+                            <option value="ป.6/3">ประถมศึกษาปีที่ 6/3</option>
+                        </select>
                     </div>
                     
                     <div class="form-group">
@@ -1173,8 +1176,18 @@
 
         function openActivityForm() {
             document.getElementById('activityModal').classList.add('active');
+            
+            // โหลดข้อมูลนักเรียนและผู้กำกับก่อนแสดงฟอร์ม
             loadStudentsForAttendance();
             loadTeachersForSelect();
+            
+            // ถ้ายังไม่มีข้อมูลผู้กำกับ ให้โหลดข้อมูลใหม่
+            if (teachersData.length === 0) {
+                console.log('No teachers data, loading...');
+                loadData().then(() => {
+                    loadTeachersForSelect();
+                });
+            }
         }
 
         function closeModal(modalId) {
@@ -1492,9 +1505,28 @@
         }
 
         function loadTeachersForSelect() {
+            const selectElement = document.getElementById('responsibleSelect');
+            
+            if (!selectElement) {
+                console.error('Select element not found');
+                return;
+            }
+            
+            if (teachersData.length === 0) {
+                console.log('No teachers data available');
+                selectElement.innerHTML = `
+                    <option value="">-- ไม่มีข้อมูลผู้กำกับ --</option>
+                    <option value="manual">กรอกด้วยตนเอง</option>
+                `;
+                return;
+            }
+            
             const html = '<option value="">-- เลือกผู้กำกับ --</option>' + 
-                teachersData.map(t => `<option value="${t.name}">${t.name}</option>`).join('');
-            document.getElementById('responsibleSelect').innerHTML = html;
+                teachersData.map(t => `<option value="${t.name}">${t.name}</option>`).join('') +
+                '<option value="manual">กรอกด้วยตนเอง</option>';
+            
+            selectElement.innerHTML = html;
+            console.log(`Loaded ${teachersData.length} teachers`);
         }
 
         // ========================================
@@ -1530,6 +1562,12 @@
                 });
             });
 
+            // จัดการผู้รับผิดชอบ
+            let responsibleName = formData.get('responsible');
+            if (responsibleName === 'manual') {
+                responsibleName = formData.get('responsibleManual');
+            }
+
             const activityData = {
                 action: 'addActivity',
                 id: 'ACT_' + Date.now(),
@@ -1538,7 +1576,7 @@
                 name: formData.get('activityName'),
                 description: formData.get('description'),
                 location: formData.get('location'),
-                responsible: formData.get('responsible'),
+                responsible: responsibleName,
                 reporter: formData.get('reporter'),
                 attendance: attendance,
                 images: []
@@ -1556,6 +1594,7 @@
                     alert('บันทึกกิจกรรมสำเร็จ');
                     closeModal('activityModal');
                     this.reset();
+                    document.getElementById('manualResponsible').style.display = 'none';
                     dataCache.clear();
                     loadData();
                 } else {
@@ -1662,6 +1701,20 @@
         // ========================================
         // Utility Functions
         // ========================================
+
+        function handleResponsibleChange(selectElement) {
+            const manualInput = document.getElementById('manualResponsible');
+            
+            if (selectElement.value === 'manual') {
+                manualInput.style.display = 'block';
+                manualInput.required = true;
+                selectElement.required = false;
+            } else {
+                manualInput.style.display = 'none';
+                manualInput.required = false;
+                selectElement.required = true;
+            }
+        }
 
         function showError(elementId, message) {
             const errorEl = document.getElementById(elementId);
