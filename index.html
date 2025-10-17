@@ -302,7 +302,7 @@
             background: white;
             padding: 30px;
             border-radius: 15px;
-            max-width: 800px;
+            max-width: 900px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
@@ -320,6 +320,7 @@
         .modal-header h2 {
             font-size: 24px;
             color: #1e3c72;
+            font-weight: 600;
         }
 
         .close-btn {
@@ -448,251 +449,323 @@
         }
 
         /* Modal Overlay */
-.modal-overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 2000;
-  align-items: center;
-  justify-content: center;
-  animation: fadeIn 0.3s ease-in-out;
-}
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease-in-out;
+        }
 
-.modal-overlay.active {
-  display: flex;
-}
+        .modal-overlay.active {
+            display: flex;
+        }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
+        .modal-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.4s ease-out;
+        }
 
-.modal-container {
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  max-width: 600px;
-  width: 90%;
-  max-height: 90vh;
-  overflow-y: auto;
-  animation: slideUp 0.4s ease-out;
-}
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
 
-@keyframes slideUp {
-  from {
-    transform: translateY(50px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 36px;
+            cursor: pointer;
+            color: white;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 30px;
-  border-bottom: 2px solid #f0f0f0;
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-  color: white;
-  border-radius: 20px 20px 0 0;
-}
+        .modal-close:hover {
+            opacity: 1;
+        }
 
-.modal-header h2 {
-  font-size: 24px;
-  margin: 0;
-  font-weight: 600;
-}
+        /* Form Styles */
+        form {
+            padding: 30px;
+        }
 
-.modal-close {
-  background: none;
-  border: none;
-  font-size: 36px;
-  cursor: pointer;
-  color: white;
-  opacity: 0.8;
-  transition: opacity 0.3s;
-  padding: 0;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+        .form-row {
+            margin-bottom: 20px;
+        }
 
-.modal-close:hover {
-  opacity: 1;
-}
+        .form-row-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
 
-/* Form Styles */
-form {
-  padding: 30px;
-}
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
 
-.form-row {
-  margin-bottom: 20px;
-}
+        .form-group label {
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
 
-.form-row-2col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  margin-bottom: 20px;
-}
+        .form-group input,
+        .form-group select {
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: 'Sarabun', sans-serif;
+            transition: all 0.3s;
+            background: white;
+        }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+            background: white;
+        }
 
-.form-group label {
-  font-weight: 600;
-  color: #1e3c72;
-  margin-bottom: 10px;
-  font-size: 15px;
-}
+        .form-group input::placeholder {
+            color: #999;
+        }
 
-.form-group input,
-.form-group select {
-  padding: 14px 16px;
-  border: 2px solid #e0e0e0;
-  border-radius: 10px;
-  font-size: 15px;
-  font-family: 'Sarabun', sans-serif;
-  transition: all 0.3s;
-  background: white;
-}
+        .error-message {
+            color: #dc3545;
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+        }
 
-.form-group input:focus,
-.form-group select:focus {
-  outline: none;
-  border-color: #1e3c72;
-  box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
-  background: white;
-}
+        .error-message.show {
+            display: block;
+        }
 
-.form-group input::placeholder {
-  color: #999;
-}
+        /* Buttons */
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+        }
 
-.error-message {
-  color: #dc3545;
-  font-size: 13px;
-  margin-top: 6px;
-  display: none;
-}
+        .btn-submit,
+        .btn-cancel {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Sarabun', sans-serif;
+        }
 
-.error-message.show {
-  display: block;
-}
+        .btn-submit {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
 
-/* Buttons */
-.form-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 2px solid #f0f0f0;
-}
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+        }
 
-.btn-submit,
-.btn-cancel {
-  flex: 1;
-  padding: 14px 24px;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-  font-family: 'Sarabun', sans-serif;
-}
+        .btn-submit:active {
+            transform: translateY(0);
+        }
 
-.btn-submit {
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-  color: white;
-}
+        .btn-cancel {
+            background: #f0f0f0;
+            color: #333;
+        }
 
-.btn-submit:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
-}
+        .btn-cancel:hover {
+            background: #e0e0e0;
+        }
 
-.btn-submit:active {
-  transform: translateY(0);
-}
+        /* Responsive */
+        @media (max-width: 600px) {
+            .modal-container {
+                width: 95%;
+                margin: 20px;
+            }
 
-.btn-cancel {
-  background: #f0f0f0;
-  color: #333;
-}
+            .form-row-2col {
+                grid-template-columns: 1fr;
+            }
 
-.btn-cancel:hover {
-  background: #e0e0e0;
-}
+            .modal-header {
+                padding: 20px;
+            }
 
-/* Responsive */
-@media (max-width: 600px) {
-  .modal-container {
-    width: 95%;
-    margin: 20px;
-  }
+            .modal-header h2 {
+                font-size: 20px;
+            }
 
-  .form-row-2col {
-    grid-template-columns: 1fr;
-  }
+            form {
+                padding: 20px;
+            }
 
-  .modal-header {
-    padding: 20px;
-  }
+            .form-actions {
+                flex-direction: column;
+            }
+        }
 
-  .modal-header h2 {
-    font-size: 20px;
-  }
+        /* Loading State */
+        .form-submit-loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
 
-  form {
-    padding: 20px;
-  }
+        .spinner-inline {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
 
-  .form-actions {
-    flex-direction: column;
-  }
-}
+        /* Attendance Status Styles */
+        .status-radio-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+        }
 
-/* Loading State */
-.form-submit-loading {
-  opacity: 0.6;
-  pointer-events: none;
-}
+        .status-radio {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
 
-.spinner-inline {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin-right: 8px;
-}
+        .status-radio input[type="radio"] {
+            width: auto;
+            margin: 0;
+        }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
+        .status-radio.present {
+            background: #d4edda;
+            color: #155724;
+        }
 
-        
+        .status-radio.absent {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-radio.leave {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-radio.skip {
+            background: #f1c0c7;
+            color: #6f1319;
+        }
+
+        .status-radio:hover {
+            opacity: 0.8;
+        }
+
+        .attendance-summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #1e3c72;
+        }
+
+        .attendance-summary h4 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+        }
+
+        .summary-item {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .summary-item .number {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .summary-item .label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .summary-present .number {
+            color: #28a745;
+        }
+
+        .summary-absent .number {
+            color: #dc3545;
+        }
+
+        .summary-leave .number {
+            color: #ffc107;
+        }
+
+        .summary-skip .number {
+            color: #e83e8c;
+        }
+
+        .summary-total .number {
+            color: #1e3c72;
+        }
     </style>
 </head>
 <body>
@@ -771,7 +844,9 @@ form {
                                 <th>ชื่อ-นามสกุล</th>
                                 <th>ชั้น</th>
                                 <th>มาเรียน</th>
+                                <th>ลา</th>
                                 <th>ขาด</th>
+                                <th>โดด</th>
                                 <th>เปอร์เซ็นต์</th>
                                 <th>สถานะ</th>
                             </tr>
@@ -871,6 +946,7 @@ form {
                         </div>
                     </div>
                 </div>
+                
                 <div class="form-group">
                     <label>เช็คชื่อนักเรียน</label>
                     <table class="attendance-table">
@@ -878,13 +954,40 @@ form {
                             <tr>
                                 <th>เลขที่</th>
                                 <th>ชื่อ-นามสกุล</th>
-                                <th style="text-align: center;">มา</th>
-                                <th style="text-align: center;">ขาด</th>
+                                <th style="text-align: center; width: 200px;">สถานะการเข้าร่วม</th>
                             </tr>
                         </thead>
                         <tbody id="attendanceList"></tbody>
                     </table>
+                    
+                    <!-- สรุปการเช็คชื่อ -->
+                    <div class="attendance-summary">
+                        <h4>สรุปการเช็คชื่อ</h4>
+                        <div class="summary-grid">
+                            <div class="summary-item summary-total">
+                                <div class="number" id="summaryTotal">0</div>
+                                <div class="label">ทั้งหมด</div>
+                            </div>
+                            <div class="summary-item summary-present">
+                                <div class="number" id="summaryPresent">0</div>
+                                <div class="label">มา</div>
+                            </div>
+                            <div class="summary-item summary-leave">
+                                <div class="number" id="summaryLeave">0</div>
+                                <div class="label">ลา</div>
+                            </div>
+                            <div class="summary-item summary-absent">
+                                <div class="number" id="summaryAbsent">0</div>
+                                <div class="label">ขาด</div>
+                            </div>
+                            <div class="summary-item summary-skip">
+                                <div class="number" id="summarySkip">0</div>
+                                <div class="label">โดด</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                
                 <div class="form-group">
                     <label>ผู้รายงาน *</label>
                     <input type="text" name="reporter" required placeholder="ชื่อครูผู้รายงาน">
@@ -902,384 +1005,138 @@ form {
     </div>
 
     <!-- Modal เพิ่มนักเรียน -->
-<div id="studentFormModal" class="modal-overlay">
-  <div class="modal-container">
-    <div class="modal-header">
-      <h2>เพิ่มนักเรียนใหม่</h2>
-      <button class="modal-close" onclick="closeStudentForm()">&times;</button>
+    <div id="studentFormModal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>เพิ่มนักเรียนใหม่</h2>
+                <button class="modal-close" onclick="closeStudentForm()">&times;</button>
+            </div>
+            
+            <form id="studentFormNew" onsubmit="submitStudentForm(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>ชื่อ-นามสกุล *</label>
+                        <input type="text" id="studentName" required placeholder="เช่น สมชาย ใจดี">
+                        <span class="error-message" id="nameError"></span>
+                    </div>
+                </div>
+
+                <div class="form-row-2col">
+                    <div class="form-group">
+                        <label>ระดับชั้น *</label>
+                        <select id="studentGrade" required>
+                            <option value="">-- เลือกระดับชั้น --</option>
+                            <option value="ม.1">มัธยมศึกษาปีที่ 1</option>
+                            <option value="ม.2">มัธยมศึกษาปีที่ 2</option>
+                            <option value="ม.3">มัธยมศึกษาปีที่ 3</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>เลขที่ *</label>
+                        <input type="number" id="studentNumber" required placeholder="1-50" min="1" max="50">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeStudentForm()">ยกเลิก</button>
+                    <button type="submit" class="btn-submit">เพิ่มนักเรียน</button>
+                </div>
+            </form>
+        </div>
     </div>
-    
-    <form id="studentFormNew" onsubmit="submitStudentForm(event)">
-      <div class="form-row">
-        <div class="form-group">
-          <label>ชื่อ-นามสกุล *</label>
-          <input type="text" id="studentName" required placeholder="เช่น สมชาย ใจดี">
-          <span class="error-message" id="nameError"></span>
-        </div>
-      </div>
 
-      <div class="form-row-2col">
-        <div class="form-group">
-          <label>ระดับชั้น *</label>
-          <select id="studentGrade" required>
-            <option value="">-- เลือกระดับชั้น --</option>
-            <option value="ม.1">มัธยมศึกษาปีที่ 1</option>
-            <option value="ม.2">มัธยมศึกษาปีที่ 2</option>
-            <option value="ม.3">มัธยมศึกษาปีที่ 3</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label>เลขที่ *</label>
-          <input type="number" id="studentNumber" required placeholder="1-50" min="1" max="50">
-        </div>
-      </div>
+    <!-- Modal เพิ่มผู้กำกับ -->
+    <div id="teacherFormModal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>เพิ่มผู้กำกับลูกเสือใหม่</h2>
+                <button class="modal-close" onclick="closeTeacherForm()">&times;</button>
+            </div>
+            
+            <form id="teacherFormNew" onsubmit="submitTeacherForm(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>ชื่อ-นามสกุล *</label>
+                        <input type="text" id="teacherName" required placeholder="เช่น นางสมจิตต์ สอนดี">
+                        <span class="error-message" id="teacherNameError"></span>
+                    </div>
+                </div>
 
-      <div class="form-actions">
-        <button type="button" class="btn-cancel" onclick="closeStudentForm()">ยกเลิก</button>
-        <button type="submit" class="btn-submit">เพิ่มนักเรียน</button>
-      </div>
-    </form>
-  </div>
-</div>
+                <div class="form-row-2col">
+                    <div class="form-group">
+                        <label>อีเมล</label>
+                        <input type="email" id="teacherEmail" placeholder="example@email.com">
+                        <span class="error-message" id="emailError"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>เบอร์โทร</label>
+                        <input type="tel" id="teacherPhone" placeholder="0xxxxxxxxx">
+                        <span class="error-message" id="phoneError"></span>
+                    </div>
+                </div>
 
-<!-- Modal เพิ่มผู้กำกับ -->
-<div id="teacherFormModal" class="modal-overlay">
-  <div class="modal-container">
-    <div class="modal-header">
-      <h2>เพิ่มผู้กำกับลูกเสือใหม่</h2>
-      <button class="modal-close" onclick="closeTeacherForm()">&times;</button>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeTeacherForm()">ยกเลิก</button>
+                    <button type="submit" class="btn-submit">เพิ่มผู้กำกับ</button>
+                </div>
+            </form>
+        </div>
     </div>
-    
-    <form id="teacherFormNew" onsubmit="submitTeacherForm(event)">
-      <div class="form-row">
-        <div class="form-group">
-          <label>ชื่อ-นามสกุล *</label>
-          <input type="text" id="teacherName" required placeholder="เช่น นางสมจิตต์ สอนดี">
-          <span class="error-message" id="teacherNameError"></span>
-        </div>
-      </div>
-
-      <div class="form-row-2col">
-        <div class="form-group">
-          <label>อีเมล</label>
-          <input type="email" id="teacherEmail" placeholder="example@email.com">
-          <span class="error-message" id="emailError"></span>
-        </div>
-        
-        <div class="form-group">
-          <label>เบอร์โทร</label>
-          <input type="tel" id="teacherPhone" placeholder="0xxxxxxxxx">
-          <span class="error-message" id="phoneError"></span>
-        </div>
-      </div>
-
-      <div class="form-actions">
-        <button type="button" class="btn-cancel" onclick="closeTeacherForm()">ยกเลิก</button>
-        <button type="submit" class="btn-submit">เพิ่มผู้กำกับ</button>
-      </div>
-    </form>
-  </div>
-</div>
                             
     <script>
+        // ========================================
+        // DataCache Class และ Utility Functions
+        // ========================================
 
-      // ========================================
-// ใส่ส่วนนี้ไปในส่วน <script> ของ index.html
-// ตั้งแต่บรรทัดแรก ก่อน const API_URL
-// ========================================
+        class DataCache {
+            constructor(ttl = 5 * 60 * 1000) { // Default: 5 นาที
+                this.data = null;
+                this.lastFetch = null;
+                this.ttl = ttl;
+            }
 
-// ===== 1. DataCache Class =====
-class DataCache {
-  constructor(ttl = 5 * 60 * 1000) { // Default: 5 นาที
-    this.data = null;
-    this.lastFetch = null;
-    this.ttl = ttl;
-  }
+            isValid() {
+                return this.data && (Date.now() - this.lastFetch < this.ttl);
+            }
 
-  isValid() {
-    return this.data && (Date.now() - this.lastFetch < this.ttl);
-  }
+            set(data) {
+                this.data = data;
+                this.lastFetch = Date.now();
+                console.log('💾 Data cached at', new Date().toLocaleTimeString('th-TH'));
+            }
 
-  set(data) {
-    this.data = data;
-    this.lastFetch = Date.now();
-    console.log('💾 Data cached at', new Date().toLocaleTimeString('th-TH'));
-  }
+            get() {
+                if (this.isValid()) {
+                    console.log('⚡ Using cached data');
+                    return this.data;
+                }
+                return null;
+            }
 
-  get() {
-    if (this.isValid()) {
-      console.log('⚡ Using cached data');
-      return this.data;
-    }
-    return null;
-  }
+            clear() {
+                this.data = null;
+                this.lastFetch = null;
+                console.log('🗑️ Cache cleared');
+            }
+        }
 
-  clear() {
-    this.data = null;
-    this.lastFetch = null;
-    console.log('🗑️ Cache cleared');
-  }
-}
-
-// ===== 2. สร้าง instance ของ cache =====
-const dataCache = new DataCache();
-
-// ===== 3. แทนที่ฟังก์ชัน loadData ด้วยนี้ =====
-async function loadData() {
-  const cached = dataCache.get();
-  if (cached) {
-    studentsData = cached.students || [];
-    activitiesData = cached.activities || [];
-    teachersData = cached.teachers || [];
-    return;
-  }
-
-  try {
-    // ใช้ JSONP แทน fetch
-    const response = await fetch(`${API_URL}?action=getData&callback=processData`);
-    const data = await response.json();
-    
-    studentsData = data.students || [];
-    activitiesData = data.activities || [];
-    teachersData = data.teachers || [];
-    
-    dataCache.set(data);
-  } catch (error) {
-    console.error('Error:', error);
-  }
-}
-
-// ===== 4. เพิ่ม Debounce Function =====
-function debounce(func, delay) {
-  let timeoutId;
-  return function(...args) {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => func(...args), delay);
-  };
-}
-
-// ===== 5. Search Activities Function =====
-function searchActivities(query) {
-  if (!query.trim()) {
-    loadActivities();
-    return;
-  }
-
-  const filtered = activitiesData.filter(activity => 
-    activity.name.toLowerCase().includes(query.toLowerCase()) ||
-    activity.description.toLowerCase().includes(query.toLowerCase()) ||
-    activity.location.toLowerCase().includes(query.toLowerCase())
-  );
-
-  const html = filtered.length > 0 
-    ? filtered.map(activity => `
-        <div class="activity-item">
-          <h3>${activity.name}</h3>
-          <div class="activity-meta">
-            <span>📅 ${activity.date}</span>
-            <span>🎯 ${activity.grade}</span>
-            <span>📍 ${activity.location}</span>
-            <span>👤 ${activity.responsible}</span>
-          </div>
-          <p style="margin-top: 10px; color: #6c757d;">${activity.description}</p>
-        </div>
-      `).join('')
-    : '<p style="color: #6c757d; text-align: center; padding: 40px;">ไม่พบผลลัพธ์</p>';
-
-  document.getElementById('activityList').innerHTML = html;
-}
-
-const debouncedSearch = debounce(searchActivities, 300);
-
-// ===== 6. View Activity Detail =====
-function viewActivityDetail(activityId) {
-  const activity = activitiesData.find(a => a.id === activityId);
-  if (!activity) {
-    alert('ไม่พบกิจกรรมนี้');
-    return;
-  }
-
-  const modal = document.createElement('div');
-  modal.className = 'modal active';
-  modal.innerHTML = `
-    <div class="modal-content" style="max-width: 700px;">
-      <div class="modal-header">
-        <h2>${activity.name}</h2>
-        <button class="close-btn" onclick="this.closest('.modal').remove()">&times;</button>
-      </div>
-      <div style="padding: 20px;">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-          <div>
-            <strong>วันที่:</strong><br>
-            <span style="color: #666;">${activity.date}</span>
-          </div>
-          <div>
-            <strong>ระดับชั้น:</strong><br>
-            <span style="color: #666;">${activity.grade}</span>
-          </div>
-          <div>
-            <strong>สถานที่:</strong><br>
-            <span style="color: #666;">${activity.location}</span>
-          </div>
-          <div>
-            <strong>ผู้รับผิดชอบ:</strong><br>
-            <span style="color: #666;">${activity.responsible}</span>
-          </div>
-        </div>
-
-        <div style="margin-bottom: 20px;">
-          <strong>รายละเอียด:</strong>
-          <p style="background: #f8f9fa; padding: 12px; border-radius: 5px; margin-top: 8px; color: #666;">
-            ${activity.description}
-          </p>
-        </div>
-
-        ${activity.attendance && activity.attendance.length > 0 ? `
-          <div>
-            <strong>ผู้เข้าร่วม (${activity.attendance.length} คน)</strong>
-            <table class="attendance-table" style="margin-top: 10px;">
-              <thead>
-                <tr>
-                  <th>ลำดับ</th>
-                  <th>ชื่อ-นามสกุล</th>
-                  <th style="width: 100px; text-align: center;">สถานะ</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${activity.attendance.map((a, idx) => `
-                  <tr>
-                    <td>${idx + 1}</td>
-                    <td>${a.studentName || 'ไม่ทราบชื่อ'}</td>
-                    <td style="text-align: center; color: ${a.status === 'present' ? '#28a745' : '#dc3545'}; font-weight: bold;">
-                      ${a.status === 'present' ? '✓ มา' : '✗ ขาด'}
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        ` : '<p style="color: #999;">ยังไม่มีข้อมูลการเข้าร่วม</p>'}
-      </div>
-    </div>
-  `;
-  document.body.appendChild(modal);
-}
-
-// ===== 7. Edit Student Function =====
-function editStudent(id) {
-  const student = studentsData.find(s => s.id === id);
-  if (!student) {
-    alert('ไม่พบนักเรียนนี้');
-    return;
-  }
-
-  const name = prompt('ชื่อ-นามสกุล:', student.name);
-  if (name === null) return;
-
-  const grade = prompt('ระดับชั้น:', student.grade);
-  if (grade === null) return;
-
-  const number = prompt('เลขที่:', student.number);
-  if (number === null) return;
-
-  if (name && grade && number) {
-    updateStudentData(id, name, grade, number);
-  }
-}
-
-async function updateStudentData(id, name, grade, number) {
-  try {
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      body: JSON.stringify({
-        action: 'updateStudent',
-        id: id,
-        name: name,
-        grade: grade,
-        number: number
-      })
-    });
-
-    const result = await response.json();
-    if (result.success) {
-      alert('✅ แก้ไขสำเร็จ');
-      dataCache.clear(); // ล้าง cache เพื่อให้ load ข้อมูลใหม่
-      loadData();
-      loadStudents();
-    } else {
-      alert('❌ ' + result.message);
-    }
-  } catch (error) {
-    console.error('Error:', error);
-    alert('⚠️ เกิดข้อผิดพลาด: ' + error.message);
-  }
-}
-
-// ===== 8. Edit Teacher Function =====
-function editTeacher(id) {
-  const teacher = teachersData.find(t => t.id === id);
-  if (!teacher) {
-    alert('ไม่พบผู้กำกับนี้');
-    return;
-  }
-
-  const name = prompt('ชื่อ-นามสกุล:', teacher.name);
-  if (name === null) return;
-
-  const email = prompt('อีเมล:', teacher.email || '');
-  if (email === null) return;
-
-  const phone = prompt('เบอร์โทร:', teacher.phone || '');
-  if (phone === null) return;
-
-  if (name) {
-    updateTeacherData(id, name, email, phone);
-  }
-}
-
-async function updateTeacherData(id, name, email, phone) {
-  try {
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      body: JSON.stringify({
-        action: 'updateTeacher',
-        id: id,
-        name: name,
-        email: email,
-        phone: phone
-      })
-    });
-
-    const result = await response.json();
-    if (result.success) {
-      alert('✅ แก้ไขสำเร็จ');
-      dataCache.clear();
-      loadData();
-      loadTeachers();
-    } else {
-      alert('❌ ' + result.message);
-    }
-  } catch (error) {
-    console.error('Error:', error);
-    alert('⚠️ เกิดข้อผิดพลาด: ' + error.message);
-  }
-}
-
-// ===== 9. Auto-refresh data ทุก 10 นาที =====
-setInterval(() => {
-  console.log('🔄 Auto-refreshing cache...');
-  dataCache.clear();
-  loadData();
-}, 10 * 60 * 1000);
+        // ========================================
+        // Global Variables
+        // ========================================
 
         const API_URL = 'https://script.google.com/macros/s/AKfycbxEpNzLlhaXsfSkMqRPX4dqHMPWLa4yn5WyKXMGAE8jx-swshKfIh8BaMPgk17a1gim/exec';
+        const dataCache = new DataCache();
         
         let studentsData = [];
         let activitiesData = [];
         let teachersData = [];
 
+        // ========================================
         // Tab Navigation
+        // ========================================
+
         function showTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
@@ -1294,7 +1151,10 @@ setInterval(() => {
             if (tabName === 'teachers') loadTeachers();
         }
 
+        // ========================================
         // Modal Functions
+        // ========================================
+
         function openActivityForm() {
             document.getElementById('activityModal').classList.add('active');
             loadStudentsForAttendance();
@@ -1305,14 +1165,28 @@ setInterval(() => {
             document.getElementById(modalId).classList.remove('active');
         }
 
-        // Load Data Functions
+        // ========================================
+        // Data Loading Functions
+        // ========================================
+
         async function loadData() {
+            const cached = dataCache.get();
+            if (cached) {
+                studentsData = cached.students || [];
+                activitiesData = cached.activities || [];
+                teachersData = cached.teachers || [];
+                return;
+            }
+
             try {
                 const response = await fetch(`${API_URL}?action=getData`);
                 const data = await response.json();
+                
                 studentsData = data.students || [];
                 activitiesData = data.activities || [];
                 teachersData = data.teachers || [];
+                
+                dataCache.set(data);
                 loadDashboard();
             } catch (error) {
                 console.error('Error loading data:', error);
@@ -1340,18 +1214,14 @@ setInterval(() => {
             const studentAttendance = {};
             
             studentsData.forEach(student => {
-                studentAttendance[student.id] = { present: 0, absent: 0 };
+                studentAttendance[student.id] = { present: 0, leave: 0, absent: 0, skip: 0 };
             });
 
             activitiesData.forEach(activity => {
                 if (activity.attendance) {
                     activity.attendance.forEach(record => {
                         if (studentAttendance[record.studentId]) {
-                            if (record.status === 'present') {
-                                studentAttendance[record.studentId].present++;
-                            } else {
-                                studentAttendance[record.studentId].absent++;
-                            }
+                            studentAttendance[record.studentId][record.status]++;
                         }
                     });
                 }
@@ -1361,9 +1231,9 @@ setInterval(() => {
             let failed = 0;
 
             Object.values(studentAttendance).forEach(record => {
-                const total = record.present + record.absent;
+                const total = record.present + record.leave + record.absent + record.skip;
                 if (total > 0) {
-                    const percentage = (record.present / total) * 100;
+                    const percentage = ((record.present + record.leave) / total) * 100;
                     if (percentage >= 80) passed++;
                     else failed++;
                 }
@@ -1385,7 +1255,7 @@ setInterval(() => {
 
         function loadActivities() {
             const html = activitiesData.map(activity => `
-                <div class="activity-item">
+                <div class="activity-item" onclick="viewActivityDetail('${activity.id}')">
                     <h3>${activity.name}</h3>
                     <div class="activity-meta">
                         <span>📅 ${activity.date}</span>
@@ -1402,23 +1272,29 @@ setInterval(() => {
         function loadReports() {
             const studentReport = studentsData.map((student, index) => {
                 let present = 0;
+                let leave = 0;
                 let absent = 0;
+                let skip = 0;
 
                 activitiesData.forEach(activity => {
                     if (activity.attendance) {
                         const record = activity.attendance.find(r => r.studentId === student.id);
                         if (record) {
-                            if (record.status === 'present') present++;
-                            else absent++;
+                            switch(record.status) {
+                                case 'present': present++; break;
+                                case 'leave': leave++; break;
+                                case 'absent': absent++; break;
+                                case 'skip': skip++; break;
+                            }
                         }
                     }
                 });
 
-                const total = present + absent;
-                const percentage = total > 0 ? ((present / total) * 100).toFixed(1) : 0;
-                const status = percentage >= 80 ? 'ผ' : 'มผ';
+                const total = present + leave + absent + skip;
+                const percentage = total > 0 ? (((present + leave) / total) * 100).toFixed(1) : 0;
+                const status = percentage >= 80 ? 'ผ่าน' : 'ไม่ผ่าน';
 
-                return { ...student, present, absent, percentage, status, index: index + 1 };
+                return { ...student, present, leave, absent, skip, percentage, status, index: index + 1 };
             });
 
             const html = studentReport.map(s => `
@@ -1426,16 +1302,18 @@ setInterval(() => {
                     <td>${s.index}</td>
                     <td>${s.name}</td>
                     <td>${s.grade}</td>
-                    <td style="text-align: center;">${s.present}</td>
-                    <td style="text-align: center;">${s.absent}</td>
-                    <td style="text-align: center;">${s.percentage}%</td>
+                    <td style="text-align: center; color: #28a745; font-weight: bold;">${s.present}</td>
+                    <td style="text-align: center; color: #ffc107; font-weight: bold;">${s.leave}</td>
+                    <td style="text-align: center; color: #dc3545; font-weight: bold;">${s.absent}</td>
+                    <td style="text-align: center; color: #e83e8c; font-weight: bold;">${s.skip}</td>
+                    <td style="text-align: center; font-weight: bold;">${s.percentage}%</td>
                     <td style="text-align: center;">
-                        <span class="status-badge ${s.status === 'ผ' ? 'status-pass' : 'status-fail'}">${s.status}</span>
+                        <span class="status-badge ${s.status === 'ผ่าน' ? 'status-pass' : 'status-fail'}">${s.status}</span>
                     </td>
                 </tr>
             `).join('');
 
-            document.getElementById('reportTable').innerHTML = html || '<tr><td colspan="7" style="text-align: center; color: #6c757d;">ยังไม่มีข้อมูล</td></tr>';
+            document.getElementById('reportTable').innerHTML = html || '<tr><td colspan="9" style="text-align: center; color: #6c757d;">ยังไม่มีข้อมูล</td></tr>';
         }
 
         function loadApprovals() {
@@ -1494,73 +1372,9 @@ setInterval(() => {
             `;
         }
 
-        async function submitCheck(activityId) {
-            const password = document.getElementById(`checkPass_${activityId}`).value;
-            const comment = document.getElementById(`checkComment_${activityId}`).value;
-
-            if (password !== 'check123') {
-                alert('รหัสผ่านไม่ถูกต้อง');
-                return;
-            }
-
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        action: 'submitCheck',
-                        activityId: activityId,
-                        checker: 'นางปณิตา ปัญญานะ',
-                        checkerDate: new Date().toLocaleString('th-TH'),
-                        checkerComment: comment
-                    })
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    alert('ตรวจสอบสำเร็จ');
-                    loadData();
-                    loadApprovals();
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('เกิดข้อผิดพลาด');
-            }
-        }
-
-        async function submitApproval(activityId) {
-            const password = document.getElementById(`approvePass_${activityId}`).value;
-            const status = document.getElementById(`approveStatus_${activityId}`).value;
-            const comment = document.getElementById(`approveComment_${activityId}`).value;
-
-            if (password !== 'admin999') {
-                alert('รหัสผ่านไม่ถูกต้อง');
-                return;
-            }
-
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        action: 'submitApproval',
-                        activityId: activityId,
-                        approver: 'นางภิรญา สอนศิริ',
-                        approverDate: new Date().toLocaleString('th-TH'),
-                        approvalStatus: status,
-                        approverComment: comment
-                    })
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    alert('อนุมัติสำเร็จ');
-                    loadData();
-                    loadApprovals();
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('เกิดข้อผิดพลาด');
-            }
-        }
+        // ========================================
+        // Student and Teacher Management
+        // ========================================
 
         function loadStudents() {
             const html = studentsData.map((student, index) => `
@@ -1598,21 +1412,67 @@ setInterval(() => {
             document.getElementById('teacherList').innerHTML = html || '<p style="color: #6c757d; text-align: center; padding: 40px;">ยังไม่มีข้อมูลผู้กำกับ</p>';
         }
 
+        // ========================================
+        // Attendance Functions
+        // ========================================
+
         function loadStudentsForAttendance() {
-            const html = studentsData.map((student, index) => `
+            const html = studentsData.map(student => `
                 <tr>
                     <td>${student.number}</td>
                     <td>${student.name}</td>
                     <td style="text-align: center;">
-                        <input type="radio" name="attendance_${student.id}" value="present" checked>
-                    </td>
-                    <td style="text-align: center;">
-                        <input type="radio" name="attendance_${student.id}" value="absent">
+                        <div class="status-radio-group">
+                            <label class="status-radio present">
+                                <input type="radio" name="attendance_${student.id}" value="present" checked onchange="updateAttendanceSummary()">
+                                มา
+                            </label>
+                            <label class="status-radio leave">
+                                <input type="radio" name="attendance_${student.id}" value="leave" onchange="updateAttendanceSummary()">
+                                ลา
+                            </label>
+                            <label class="status-radio absent">
+                                <input type="radio" name="attendance_${student.id}" value="absent" onchange="updateAttendanceSummary()">
+                                ขาด
+                            </label>
+                            <label class="status-radio skip">
+                                <input type="radio" name="attendance_${student.id}" value="skip" onchange="updateAttendanceSummary()">
+                                โดด
+                            </label>
+                        </div>
                     </td>
                 </tr>
             `).join('');
 
             document.getElementById('attendanceList').innerHTML = html;
+            updateAttendanceSummary();
+        }
+
+        function updateAttendanceSummary() {
+            let total = 0;
+            let present = 0;
+            let leave = 0;
+            let absent = 0;
+            let skip = 0;
+
+            studentsData.forEach(student => {
+                const checkedRadio = document.querySelector(`input[name="attendance_${student.id}"]:checked`);
+                if (checkedRadio) {
+                    total++;
+                    switch(checkedRadio.value) {
+                        case 'present': present++; break;
+                        case 'leave': leave++; break;
+                        case 'absent': absent++; break;
+                        case 'skip': skip++; break;
+                    }
+                }
+            });
+
+            document.getElementById('summaryTotal').textContent = total;
+            document.getElementById('summaryPresent').textContent = present;
+            document.getElementById('summaryLeave').textContent = leave;
+            document.getElementById('summaryAbsent').textContent = absent;
+            document.getElementById('summarySkip').textContent = skip;
         }
 
         function loadTeachersForSelect() {
@@ -1620,6 +1480,10 @@ setInterval(() => {
                 teachersData.map(t => `<option value="${t.name}">${t.name}</option>`).join('');
             document.getElementById('responsibleSelect').innerHTML = html;
         }
+
+        // ========================================
+        // Form Handling
+        // ========================================
 
         function previewImage(input, previewId) {
             const preview = document.getElementById(previewId);
@@ -1632,7 +1496,7 @@ setInterval(() => {
             }
         }
 
-        // Form Submission
+        // Activity Form Submission
         document.getElementById('activityForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -1676,6 +1540,7 @@ setInterval(() => {
                     alert('บันทึกกิจกรรมสำเร็จ');
                     closeModal('activityModal');
                     this.reset();
+                    dataCache.clear();
                     loadData();
                 } else {
                     alert('เกิดข้อผิดพลาด: ' + result.message);
@@ -1688,7 +1553,415 @@ setInterval(() => {
             }
         });
 
-        
+        // ========================================
+        // Student and Teacher Forms
+        // ========================================
+
+        function openStudentForm() {
+            document.getElementById('studentFormModal').classList.add('active');
+            document.getElementById('studentFormNew').reset();
+            clearErrors();
+        }
+
+        function closeStudentForm() {
+            document.getElementById('studentFormModal').classList.remove('active');
+            document.getElementById('studentFormNew').reset();
+            clearErrors();
+        }
+
+        function openTeacherForm() {
+            document.getElementById('teacherFormModal').classList.add('active');
+            document.getElementById('teacherFormNew').reset();
+            clearErrors();
+        }
+
+        function closeTeacherForm() {
+            document.getElementById('teacherFormModal').classList.remove('active');
+            document.getElementById('teacherFormNew').reset();
+            clearErrors();
+        }
+
+        function submitStudentForm(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('studentName').value.trim();
+            const grade = document.getElementById('studentGrade').value;
+            const number = document.getElementById('studentNumber').value;
+
+            let hasError = false;
+            if (!name || name.length < 3) {
+                showError('nameError', 'กรุณากรอกชื่อให้ถูกต้อง (อย่างน้อย 3 ตัวอักษร)');
+                hasError = true;
+            }
+            if (!grade) {
+                showError('gradeError', 'กรุณาเลือกระดับชั้น');
+                hasError = true;
+            }
+            if (!number || number < 1 || number > 50) {
+                showError('numberError', 'กรุณากรอกเลขที่ให้ถูกต้อง (1-50)');
+                hasError = true;
+            }
+
+            if (hasError) return;
+
+            addStudent({
+                name: name,
+                grade: grade,
+                number: number
+            });
+        }
+
+        function submitTeacherForm(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('teacherName').value.trim();
+            const email = document.getElementById('teacherEmail').value.trim();
+            const phone = document.getElementById('teacherPhone').value.trim();
+
+            let hasError = false;
+            if (!name || name.length < 3) {
+                showError('teacherNameError', 'กรุณากรอกชื่อให้ถูกต้อง');
+                hasError = true;
+            }
+            
+            if (email && !isValidEmail(email)) {
+                showError('emailError', 'กรุณากรอกอีเมลให้ถูกต้อง');
+                hasError = true;
+            }
+
+            if (phone && !isValidPhone(phone)) {
+                showError('phoneError', 'กรุณากรอกเบอร์โทรให้ถูกต้อง');
+                hasError = true;
+            }
+
+            if (hasError) return;
+
+            addTeacher({
+                name: name,
+                email: email,
+                phone: phone
+            });
+        }
+
+        // ========================================
+        // Utility Functions
+        // ========================================
+
+        function showError(elementId, message) {
+            const errorEl = document.getElementById(elementId);
+            if (errorEl) {
+                errorEl.textContent = message;
+                errorEl.classList.add('show');
+            }
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.textContent = '';
+                el.classList.remove('show');
+            });
+        }
+
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function isValidPhone(phone) {
+            return /^[0-9]{10}$/.test(phone.replace(/\D/g, ''));
+        }
+
+        async function addStudent(studentData) {
+            try {
+                const btn = document.querySelector('#studentFormNew button[type="submit"]');
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner-inline"></span>กำลังเพิ่ม...';
+
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'addStudent',
+                        id: 'STU_' + Date.now(),
+                        ...studentData
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccessMessage('เพิ่มนักเรียนสำเร็จ');
+                    closeStudentForm();
+                    dataCache.clear();
+                    await loadData();
+                    loadStudents();
+                } else {
+                    alert('เกิดข้อผิดพลาด: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('เกิดข้อผิดพลาด: ' + error.message);
+            } finally {
+                const btn = document.querySelector('#studentFormNew button[type="submit"]');
+                btn.disabled = false;
+                btn.innerHTML = 'เพิ่มนักเรียน';
+            }
+        }
+
+        async function addTeacher(teacherData) {
+            try {
+                const btn = document.querySelector('#teacherFormNew button[type="submit"]');
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner-inline"></span>กำลังเพิ่ม...';
+
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'addTeacher',
+                        id: 'TCH_' + Date.now(),
+                        ...teacherData
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccessMessage('เพิ่มผู้กำกับสำเร็จ');
+                    closeTeacherForm();
+                    dataCache.clear();
+                    await loadData();
+                    loadTeachers();
+                } else {
+                    alert('เกิดข้อผิดพลาด: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('เกิดข้อผิดพลาด: ' + error.message);
+            } finally {
+                const btn = document.querySelector('#teacherFormNew button[type="submit"]');
+                btn.disabled = false;
+                btn.innerHTML = 'เพิ่มผู้กำกับ';
+            }
+        }
+
+        function showSuccessMessage(message) {
+            const msg = document.createElement('div');
+            msg.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #28a745;
+                color: white;
+                padding: 16px 24px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                z-index: 3000;
+                animation: slideInRight 0.3s ease-out;
+            `;
+            msg.textContent = '✓ ' + message;
+            document.body.appendChild(msg);
+            
+            setTimeout(() => {
+                msg.style.animation = 'slideOutRight 0.3s ease-out';
+                setTimeout(() => msg.remove(), 300);
+            }, 3000);
+        }
+
+        // ========================================
+        // Advanced Functions
+        // ========================================
+
+        function viewActivityDetail(activityId) {
+            const activity = activitiesData.find(a => a.id === activityId);
+            if (!activity) {
+                alert('ไม่พบกิจกรรมนี้');
+                return;
+            }
+
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 700px;">
+                    <div class="modal-header">
+                        <h2>${activity.name}</h2>
+                        <button class="close-btn" onclick="this.closest('.modal').remove()">&times;</button>
+                    </div>
+                    <div style="padding: 20px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                            <div>
+                                <strong>วันที่:</strong><br>
+                                <span style="color: #666;">${activity.date}</span>
+                            </div>
+                            <div>
+                                <strong>ระดับชั้น:</strong><br>
+                                <span style="color: #666;">${activity.grade}</span>
+                            </div>
+                            <div>
+                                <strong>สถานที่:</strong><br>
+                                <span style="color: #666;">${activity.location}</span>
+                            </div>
+                            <div>
+                                <strong>ผู้รับผิดชอบ:</strong><br>
+                                <span style="color: #666;">${activity.responsible}</span>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <strong>รายละเอียด:</strong>
+                            <p style="background: #f8f9fa; padding: 12px; border-radius: 5px; margin-top: 8px; color: #666;">
+                                ${activity.description}
+                            </p>
+                        </div>
+
+                        ${activity.attendance && activity.attendance.length > 0 ? `
+                            <div>
+                                <strong>ผู้เข้าร่วม (${activity.attendance.length} คน)</strong>
+                                <table class="attendance-table" style="margin-top: 10px;">
+                                    <thead>
+                                        <tr>
+                                            <th>ลำดับ</th>
+                                            <th>ชื่อ-นามสกุล</th>
+                                            <th style="width: 100px; text-align: center;">สถานะ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${activity.attendance.map((a, idx) => {
+                                            let statusText = '';
+                                            let statusColor = '';
+                                            switch(a.status) {
+                                                case 'present':
+                                                    statusText = '✓ มา';
+                                                    statusColor = '#28a745';
+                                                    break;
+                                                case 'leave':
+                                                    statusText = '📝 ลา';
+                                                    statusColor = '#ffc107';
+                                                    break;
+                                                case 'absent':
+                                                    statusText = '✗ ขาด';
+                                                    statusColor = '#dc3545';
+                                                    break;
+                                                case 'skip':
+                                                    statusText = '🚫 โดด';
+                                                    statusColor = '#e83e8c';
+                                                    break;
+                                            }
+                                            return `
+                                                <tr>
+                                                    <td>${idx + 1}</td>
+                                                    <td>${a.studentName || 'ไม่ทราบชื่อ'}</td>
+                                                    <td style="text-align: center; color: ${statusColor}; font-weight: bold;">
+                                                        ${statusText}
+                                                    </td>
+                                                </tr>
+                                            `;
+                                        }).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ` : '<p style="color: #999;">ยังไม่มีข้อมูลการเข้าร่วม</p>'}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function editStudent(id) {
+            const student = studentsData.find(s => s.id === id);
+            if (!student) {
+                alert('ไม่พบนักเรียนนี้');
+                return;
+            }
+
+            const name = prompt('ชื่อ-นามสกุล:', student.name);
+            if (name === null) return;
+
+            const grade = prompt('ระดับชั้น:', student.grade);
+            if (grade === null) return;
+
+            const number = prompt('เลขที่:', student.number);
+            if (number === null) return;
+
+            if (name && grade && number) {
+                updateStudentData(id, name, grade, number);
+            }
+        }
+
+        async function updateStudentData(id, name, grade, number) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'updateStudent',
+                        id: id,
+                        name: name,
+                        grade: grade,
+                        number: number
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('✅ แก้ไขสำเร็จ');
+                    dataCache.clear();
+                    loadData();
+                    loadStudents();
+                } else {
+                    alert('❌ ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('⚠️ เกิดข้อผิดพลาด: ' + error.message);
+            }
+        }
+
+        function editTeacher(id) {
+            const teacher = teachersData.find(t => t.id === id);
+            if (!teacher) {
+                alert('ไม่พบผู้กำกับนี้');
+                return;
+            }
+
+            const name = prompt('ชื่อ-นามสกุล:', teacher.name);
+            if (name === null) return;
+
+            const email = prompt('อีเมล:', teacher.email || '');
+            if (email === null) return;
+
+            const phone = prompt('เบอร์โทร:', teacher.phone || '');
+            if (phone === null) return;
+
+            if (name) {
+                updateTeacherData(id, name, email, phone);
+            }
+        }
+
+        async function updateTeacherData(id, name, email, phone) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'updateTeacher',
+                        id: id,
+                        name: name,
+                        email: email,
+                        phone: phone
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('✅ แก้ไขสำเร็จ');
+                    dataCache.clear();
+                    loadData();
+                    loadTeachers();
+                } else {
+                    alert('❌ ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('⚠️ เกิดข้อผิดพลาด: ' + error.message);
+            }
+        }
+
         async function deleteStudent(id) {
             if (!confirm('ต้องการลบนักเรียนคนนี้หรือไม่?')) return;
 
@@ -1704,7 +1977,9 @@ setInterval(() => {
                 const result = await response.json();
                 if (result.success) {
                     alert('ลบสำเร็จ');
+                    dataCache.clear();
                     loadData();
+                    loadStudents();
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -1727,7 +2002,79 @@ setInterval(() => {
                 const result = await response.json();
                 if (result.success) {
                     alert('ลบสำเร็จ');
+                    dataCache.clear();
                     loadData();
+                    loadTeachers();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('เกิดข้อผิดพลาด');
+            }
+        }
+
+        async function submitCheck(activityId) {
+            const password = document.getElementById(`checkPass_${activityId}`).value;
+            const comment = document.getElementById(`checkComment_${activityId}`).value;
+
+            if (password !== 'check123') {
+                alert('รหัสผ่านไม่ถูกต้อง');
+                return;
+            }
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'submitCheck',
+                        activityId: activityId,
+                        checker: 'นางปณิตา ปัญญานะ',
+                        checkerDate: new Date().toLocaleString('th-TH'),
+                        checkerComment: comment
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('ตรวจสอบสำเร็จ');
+                    dataCache.clear();
+                    loadData();
+                    loadApprovals();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('เกิดข้อผิดพลาด');
+            }
+        }
+
+        async function submitApproval(activityId) {
+            const password = document.getElementById(`approvePass_${activityId}`).value;
+            const status = document.getElementById(`approveStatus_${activityId}`).value;
+            const comment = document.getElementById(`approveComment_${activityId}`).value;
+
+            if (password !== 'admin999') {
+                alert('รหัสผ่านไม่ถูกต้อง');
+                return;
+            }
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'submitApproval',
+                        activityId: activityId,
+                        approver: 'นางภิรญา สอนศิริ',
+                        approverDate: new Date().toLocaleString('th-TH'),
+                        approvalStatus: status,
+                        approverComment: comment
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('อนุมัติสำเร็จ');
+                    dataCache.clear();
+                    loadData();
+                    loadApprovals();
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -1750,236 +2097,32 @@ setInterval(() => {
             window.open(`${API_URL}?action=generatePDF&activityId=${activityId}`, '_blank');
         }
 
+        // ========================================
+        // Auto-refresh and Event Listeners
+        // ========================================
+
+        setInterval(() => {
+            console.log('🔄 Auto-refreshing cache...');
+            dataCache.clear();
+            loadData();
+        }, 10 * 60 * 1000);
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+
+        // ========================================
         // Initialize
+        // ========================================
+
         window.onload = function() {
             loadData();
         };
-
-        // ===== Open/Close Student Form =====
-function openStudentForm() {
-  document.getElementById('studentFormModal').classList.add('active');
-  document.getElementById('studentFormNew').reset();
-  clearErrors();
-}
-
-function closeStudentForm() {
-  document.getElementById('studentFormModal').classList.remove('active');
-  document.getElementById('studentFormNew').reset();
-  clearErrors();
-}
-
-// ===== Open/Close Teacher Form =====
-function openTeacherForm() {
-  document.getElementById('teacherFormModal').classList.add('active');
-  document.getElementById('teacherFormNew').reset();
-  clearErrors();
-}
-
-function closeTeacherForm() {
-  document.getElementById('teacherFormModal').classList.remove('active');
-  document.getElementById('teacherFormNew').reset();
-  clearErrors();
-}
-
-// ===== Validate & Submit Student Form =====
-function submitStudentForm(event) {
-  event.preventDefault();
-  
-  const name = document.getElementById('studentName').value.trim();
-  const grade = document.getElementById('studentGrade').value;
-  const number = document.getElementById('studentNumber').value;
-
-  // Validation
-  let hasError = false;
-  if (!name || name.length < 3) {
-    showError('nameError', 'กรุณากรอกชื่อให้ถูกต้อง (อย่างน้อย 3 ตัวอักษร)');
-    hasError = true;
-  }
-  if (!grade) {
-    showError('gradeError', 'กรุณาเลือกระดับชั้น');
-    hasError = true;
-  }
-  if (!number || number < 1 || number > 50) {
-    showError('numberError', 'กรุณากรอกเลขที่ให้ถูกต้อง (1-50)');
-    hasError = true;
-  }
-
-  if (hasError) return;
-
-  // Submit
-  addStudent({
-    name: name,
-    grade: grade,
-    number: number
-  });
-}
-
-// ===== Validate & Submit Teacher Form =====
-function submitTeacherForm(event) {
-  event.preventDefault();
-  
-  const name = document.getElementById('teacherName').value.trim();
-  const email = document.getElementById('teacherEmail').value.trim();
-  const phone = document.getElementById('teacherPhone').value.trim();
-
-  // Validation
-  let hasError = false;
-  if (!name || name.length < 3) {
-    showError('teacherNameError', 'กรุณากรอกชื่อให้ถูกต้อง');
-    hasError = true;
-  }
-  
-  if (email && !isValidEmail(email)) {
-    showError('emailError', 'กรุณากรอกอีเมลให้ถูกต้อง');
-    hasError = true;
-  }
-
-  if (phone && !isValidPhone(phone)) {
-    showError('phoneError', 'กรุณากรอกเบอร์โทรให้ถูกต้อง');
-    hasError = true;
-  }
-
-  if (hasError) return;
-
-  // Submit
-  addTeacher({
-    name: name,
-    email: email,
-    phone: phone
-  });
-}
-
-// ===== Utility Functions =====
-function showError(elementId, message) {
-  const errorEl = document.getElementById(elementId);
-  if (errorEl) {
-    errorEl.textContent = message;
-    errorEl.classList.add('show');
-  }
-}
-
-function clearErrors() {
-  document.querySelectorAll('.error-message').forEach(el => {
-    el.textContent = '';
-    el.classList.remove('show');
-  });
-}
-
-function isValidEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-function isValidPhone(phone) {
-  return /^[0-9]{10}$/.test(phone.replace(/\D/g, ''));
-}
-
-// ===== Add Student =====
-async function addStudent(studentData) {
-  try {
-    const btn = document.querySelector('#studentFormNew button[type="submit"]');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner-inline"></span>กำลังเพิ่ม...';
-
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      body: JSON.stringify({
-        action: 'addStudent',
-        id: 'STU_' + Date.now(),
-        ...studentData
-      })
-    });
-
-    const result = await response.json();
-    
-    if (result.success) {
-      showSuccessMessage('เพิ่มนักเรียนสำเร็จ');
-      closeStudentForm();
-      dataCache.clear();
-      await loadData();
-      loadStudents();
-    } else {
-      alert('เกิดข้อผิดพลาด: ' + result.message);
-    }
-  } catch (error) {
-    console.error('Error:', error);
-    alert('เกิดข้อผิดพลาด: ' + error.message);
-  } finally {
-    const btn = document.querySelector('#studentFormNew button[type="submit"]');
-    btn.disabled = false;
-    btn.innerHTML = 'เพิ่มนักเรียน';
-  }
-}
-
-// ===== Add Teacher =====
-async function addTeacher(teacherData) {
-  try {
-    const btn = document.querySelector('#teacherFormNew button[type="submit"]');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner-inline"></span>กำลังเพิ่ม...';
-
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      body: JSON.stringify({
-        action: 'addTeacher',
-        id: 'TCH_' + Date.now(),
-        ...teacherData
-      })
-    });
-
-    const result = await response.json();
-    
-    if (result.success) {
-      showSuccessMessage('เพิ่มผู้กำกับสำเร็จ');
-      closeTeacherForm();
-      dataCache.clear();
-      await loadData();
-      loadTeachers();
-    } else {
-      alert('เกิดข้อผิดพลาด: ' + result.message);
-    }
-  } catch (error) {
-    console.error('Error:', error);
-    alert('เกิดข้อผิดพลาด: ' + error.message);
-  } finally {
-    const btn = document.querySelector('#teacherFormNew button[type="submit"]');
-    btn.disabled = false;
-    btn.innerHTML = 'เพิ่มผู้กำกับ';
-  }
-}
-
-// ===== Show Success Message =====
-function showSuccessMessage(message) {
-  const msg = document.createElement('div');
-  msg.style.cssText = `
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: #28a745;
-    color: white;
-    padding: 16px 24px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    z-index: 3000;
-    animation: slideInRight 0.3s ease-out;
-  `;
-  msg.textContent = '✓ ' + message;
-  document.body.appendChild(msg);
-  
-  setTimeout(() => {
-    msg.style.animation = 'slideOutRight 0.3s ease-out';
-    setTimeout(() => msg.remove(), 300);
-  }, 3000);
-}
-
-// Close modal when clicking outside
-document.querySelectorAll('.modal-overlay').forEach(modal => {
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      modal.classList.remove('active');
-    }
-  });
-});
-        
     </script>
 </body>
 </html>
