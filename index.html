@@ -6,7 +6,815 @@
     <title>ระบบบันทึกกิจกรรมลูกเสือ - โรงเรียนราชประชานุเคราะห์ 56</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
+        function viewFullActivityDetail(activityId) {
+            const activity = activitiesData.find(a => a.id === activityId);
+            if (!activity) {
+                alert('ไม่พบกิจกรรมนี้');
+                return;
+            }
+
+            // คำนวณสถิติการเข้าร่วม
+            let total = 0, present = 0, leave = 0, absent = 0, skip = 0;
+            
+            if (activity.attendance) {
+                activity.attendance.forEach(record => {
+                    total++;
+                    switch(record.status) {
+                        case 'present': present++; break;
+                        case 'leave': leave++; break;
+                        case 'absent': absent++; break;
+                        case 'skip': skip++; break;
+                    }
+                });
+            }
+
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content activity-detail-modal">
+                    <div class="modal-header">
+                        <h2>📋 รายละเอียดกิจกรรม: ${activity.name}</h2>
+                        <button class="close-btn" onclick="this.closest('.modal').remove()">&times;</button>
+                    </div>
+                    <div style="padding: 30px;">
+                        <!-- ข้อมูลกิจกรรม -->
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                            <h3 style="color: #1e3c72; margin-bottom: 15px;">📝 ข้อมูลกิจกรรม</h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                                <div>
+                                    <strong>📅 วันที่:</strong><br>
+                                    <span style="color: #666;">${activity.date}</span>
+                                </div>
+                                <div>
+                                    <strong>🎯 ระดับชั้น:</strong><br>
+                                    <span style="color: #666;">${activity.grade}</span>
+                                </div>
+                                <div>
+                                    <strong>📍 สถานที่:</strong><br>
+                                    <span style="color: #666;">${activity.location}</span>
+                                </div>
+                                <div>
+                                    <strong>👤 ผู้รับผิดชอบ:</strong><br>
+                                    <span style="color: #666;">${activity.responsible}</span>
+                                </div>
+                                <div>
+                                    <strong>📝 ผู้รายงาน:</strong><br>
+                                    <span style="color: #666;">${activity.reporter || '-'}</span>
+                                </div>
+                                <div>
+                                    <strong>⏰ เวลาส่งรายงาน:</strong><br>
+                                    <span style="color: #666;">${new Date(activity.id.split('_')[1] * 1).toLocaleString('th-TH') || '-'}</span>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top: 20px;">
+                                <strong>📋 รายละเอียดกิจกรรม:</strong>
+                                <div style="background: white; padding: 15px; border-radius: 8px; margin-top: 8px; border-left: 4px solid #1e3c72;">
+                                    ${activity.description}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- สถิติการเข้าร่วม -->
+                        <div class="activity-attendance-summary">
+                            <h3 style="color: #1e3c72; margin-bottom: 15px;">📊 สถิติการเข้าร่วม</h3>
+                            <div class="attendance-stats">
+                                <div class="stat-item">
+                                    <div class="number" style="color: #1e3c72;">${total}</div>
+                                    <div class="label">ทั้งหมด</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="number" style="color: #28a745;">${present}</div>
+                                    <div class="label">มา</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="number" style="color: #ffc107;">${leave}</div>
+                                    <div class="label">ลา</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="number" style="color: #dc3545;">${absent}</div>
+                                    <div class="label">ขาด</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="number" style="color: #e83e8c;">${skip}</div>
+                                    <div class="label">โดด</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- รายชื่อผู้เข้าร่วม -->
+                        ${activity.attendance && activity.attendance.length > 0 ? `
+                            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                                <h3 style="color: #1e3c72; margin-bottom: 15px;">👥 รายชื่อผู้เข้าร่วม (${activity.attendance.length} คน)</h3>
+                                <table class="attendance-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 60px;">ลำดับ</th>
+                                            <th>ชื่อ-นามสกุล</th>
+                                            <th style="width: 120px; text-align: center;">สถานะ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${activity.attendance.map((a, idx) => {
+                                            let statusText = '', statusColor = '', statusIcon = '';
+                                            switch(a.status) {
+                                                case 'present':
+                                                    statusText = 'มา'; statusColor = '#28a745'; statusIcon = '✓';
+                                                    break;
+                                                case 'leave':
+                                                    statusText = 'ลา'; statusColor = '#ffc107'; statusIcon = '📝';
+                                                    break;
+                                                case 'absent':
+                                                    statusText = 'ขาด'; statusColor = '#dc3545'; statusIcon = '✗';
+                                                    break;
+                                                case 'skip':
+                                                    statusText = 'โดด'; statusColor = '#e83e8c'; statusIcon = '🚫';
+                                                    break;
+                                            }
+                                            return `
+                                                <tr>
+                                                    <td style="text-align: center;">${idx + 1}</td>
+                                                    <td>${a.studentName || 'ไม่ทราบชื่อ'}</td>
+                                                    <td style="text-align: center; color: ${statusColor}; font-weight: bold;">
+                                                        ${statusIcon} ${statusText}
+                                                    </td>
+                                                </tr>
+                                            `;
+                                        }).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ` : '<div style="background: #fff3cd; padding: 15px; border-radius: 8px; color: #856404; margin: 20px 0;">📝 ยังไม่มีข้อมูลการเข้าร่วม</div>'}
+
+                        <!-- รูปภาพกิจกรรม -->
+                        ${activity.images && activity.images.length > 0 ? `
+                            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                                <h3 style="color: #1e3c72; margin-bottom: 15px;">📷 รูปภาพกิจกรรม (${activity.images.length} รูป)</h3>
+                                <div class="activity-images">
+                                    ${activity.images.map((img, idx) => `
+                                        <img src="${img.url || img}" alt="รูปกิจกรรม ${idx + 1}" 
+                                             onclick="openImageLightbox('${img.url || img}')"
+                                             title="คลิกเพื่อดูขนาดใหญ่">
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : '<div style="background: #fff3cd; padding: 15px; border-radius: 8px; color: #856404; margin: 20px 0;">📷 ยังไม่มีรูปภาพกิจกรรม</div>'}
+
+                        <!-- สถานะการตรวจสอบและอนุมัติ -->
+                        <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                            <h3 style="color: #1e3c72; margin-bottom: 15px;">📋 สถานะการตรวจสอบและอนุมัติ</h3>
+                            
+                            <div style="display: grid; gap: 15px;">
+                                <!-- สถานะการตรวจ -->
+                                <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid ${activity.checker ? '#28a745' : '#ffc107'};">
+                                    <h4>✅ การตรวจสอบ</h4>
+                                    ${activity.checker ? `
+                                        <p><strong>สถานะ:</strong> <span style="color: #28a745;">✅ ตรวจแล้ว</span></p>
+                                        <p><strong>ผู้ตรวจ:</strong> ${activity.checker}</p>
+                                        <p><strong>วันที่ตรวจ:</strong> ${activity.checkerDate}</p>
+                                        <p><strong>ความคิดเห็น:</strong> ${activity.checkerComment || 'ไม่มีความคิดเห็น'}</p>
+                                    ` : `
+                                        <p><strong>สถานะ:</strong> <span style="color: #ffc107;">⏳ รอตรวจสอบ</span></p>
+                                        <p><strong>ผู้ตรวจ:</strong> นางปณิตา ปัญญานะ</p>
+                                    `}
+                                </div>
+
+                                <!-- สถานะการอนุมัติ -->
+                                <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid ${activity.approver ? (activity.approvalStatus === 'ผ่าน' ? '#28a745' : '#dc3545') : '#6c757d'};">
+                                    <h4>🔖 การอนุมัติ</h4>
+                                    ${activity.approver ? `
+                                        <p><strong>สถานะ:</strong> 
+                                            <span style="color: ${activity.approvalStatus === 'ผ่าน' ? '#28a745' : '#dc3545'};">
+                                                ${activity.approvalStatus === 'ผ่าน' ? '✅ ผ่าน' : '❌ ไม่ผ่าน'}
+                                            </span>
+                                        </p>
+                                        <p><strong>ผู้อนุมัติ:</strong> ${activity.approver}</p>
+                                        <p><strong>วันที่อนุมัติ:</strong> ${activity.approverDate}</p>
+                                        <p><strong>ความคิดเห็น:</strong> ${activity.approverComment || 'ไม่มีความคิดเห็น'}</p>
+                                    ` : activity.checker ? `
+                                        <p><strong>สถานะ:</strong> <span style="color: #ffc107;">⏳ รออนุมัติ</span></p>
+                                        <p><strong>ผู้อนุมัติ:</strong> นางภิรญา สอนศิริ (รองผู้อำนวยการฯ)</p>
+                                    ` : `
+                                        <p><strong>สถานะ:</strong> <span style="color: #6c757d;">⏸️ รอตรวจสอบก่อน</span></p>
+                                        <p><strong>ผู้อนุมัติ:</strong> นางภิรญา สอนศิริ (รองผู้อำนวยการฯ)</p>
+                                    `}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 30px;">
+                            <button class="btn btn-danger" onclick="this.closest('.modal').remove()">ปิด</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function openImageLightbox(imageUrl) {
+            const lightbox = document.createElement('div');
+            lightbox.className = 'image-lightbox active';
+            lightbox.innerHTML = `
+                <span class="lightbox-close" onclick="this.closest('.image-lightbox').remove()">&times;</span>
+                <img src="${imageUrl}" class="lightbox-image" alt="รูปภาพขนาดใหญ่">
+            `;
+            document.body.appendChild(lightbox);
+            
+            // ปิดเมื่อคลิกพื้นหลัง
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) {
+                    lightbox.remove();
+                }
+            });
+        }
+
+        // ========================================
+        // Student and Teacher Forms
+        // ========================================
+
+        function openStudentForm() {
+            document.getElementById('studentFormModal').classList.add('active');
+            document.getElementById('studentFormNew').reset();
+            clearErrors();
+        }
+
+        function closeStudentForm() {
+            document.getElementById('studentFormModal').classList.remove('active');
+            document.getElementById('studentFormNew').reset();
+            clearErrors();
+        }
+
+        function openTeacherForm() {
+            document.getElementById('teacherFormModal').classList.add('active');
+            document.getElementById('teacherFormNew').reset();
+            clearErrors();
+        }
+
+        function closeTeacherForm() {
+            document.getElementById('teacherFormModal').classList.remove('active');
+            document.getElementById('teacherFormNew').reset();
+            clearErrors();
+        }
+
+        function submitStudentForm(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('studentName').value.trim();
+            const grade = document.getElementById('studentGrade').value;
+            const number = document.getElementById('studentNumber').value;
+
+            let hasError = false;
+            if (!name || name.length < 3) {
+                showError('nameError', 'กรุณากรอกชื่อให้ถูกต้อง (อย่างน้อย 3 ตัวอักษร)');
+                hasError = true;
+            }
+            if (!grade) {
+                showError('gradeError', 'กรุณาเลือกระดับชั้น');
+                hasError = true;
+            }
+            if (!number || number < 1 || number > 50) {
+                showError('numberError', 'กรุณากรอกเลขที่ให้ถูกต้อง (1-50)');
+                hasError = true;
+            }
+
+            if (hasError) return;
+
+            addStudent({
+                name: name,
+                grade: grade,
+                number: number
+            });
+        }
+
+        function submitTeacherForm(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('teacherName').value.trim();
+            const email = document.getElementById('teacherEmail').value.trim();
+            const phone = document.getElementById('teacherPhone').value.trim();
+
+            let hasError = false;
+            if (!name || name.length < 3) {
+                showError('teacherNameError', 'กรุณากรอกชื่อให้ถูกต้อง');
+                hasError = true;
+            }
+            
+            if (email && !isValidEmail(email)) {
+                showError('emailError', 'กรุณากรอกอีเมลให้ถูกต้อง');
+                hasError = true;
+            }
+
+            if (phone && !isValidPhone(phone)) {
+                showError('phoneError', 'กรุณากรอกเบอร์โทรให้ถูกต้อง');
+                hasError = true;
+            }
+
+            if (hasError) return;
+
+            addTeacher({
+                name: name,
+                email: email,
+                phone: phone
+            });
+        }
+
+        // ========================================
+        // Utility Functions
+        // ========================================
+
+        function handleResponsibleChange(selectElement) {
+            const manualInput = document.getElementById('manualResponsible');
+            
+            if (selectElement.value === 'manual') {
+                manualInput.style.display = 'block';
+                manualInput.required = true;
+                selectElement.required = false;
+            } else {
+                manualInput.style.display = 'none';
+                manualInput.required = false;
+                selectElement.required = true;
+            }
+        }
+
+        function showError(elementId, message) {
+            const errorEl = document.getElementById(elementId);
+            if (errorEl) {
+                errorEl.textContent = message;
+                errorEl.classList.add('show');
+            }
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.textContent = '';
+                el.classList.remove('show');
+            });
+        }
+
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function isValidPhone(phone) {
+            return /^[0-9]{10}$/.test(phone.replace(/\D/g, ''));
+        }
+
+        async function addStudent(studentData) {
+            try {
+                const btn = document.querySelector('#studentFormNew button[type="submit"]');
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner-inline"></span>กำลังเพิ่ม...';
+
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'addStudent',
+                        id: 'STU_' + Date.now(),
+                        ...studentData
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccessMessage('เพิ่มนักเรียนสำเร็จ');
+                    closeStudentForm();
+                    dataCache.clear();
+                    await loadData();
+                    loadStudents();
+                } else {
+                    alert('เกิดข้อผิดพลาด: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('เกิดข้อผิดพลาด: ' + error.message);
+            } finally {
+                const btn = document.querySelector('#studentFormNew button[type="submit"]');
+                btn.disabled = false;
+                btn.innerHTML = 'เพิ่มนักเรียน';
+            }
+        }
+
+        async function addTeacher(teacherData) {
+            try {
+                const btn = document.querySelector('#teacherFormNew button[type="submit"]');
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner-inline"></span>กำลังเพิ่ม...';
+
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'addTeacher',
+                        id: 'TCH_' + Date.now(),
+                        ...teacherData
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccessMessage('เพิ่มผู้กำกับสำเร็จ');
+                    closeTeacherForm();
+                    dataCache.clear();
+                    await loadData();
+                    loadTeachers();
+                } else {
+                    alert('เกิดข้อผิดพลาด: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('เกิดข้อผิดพลาด: ' + error.message);
+            } finally {
+                const btn = document.querySelector('#teacherFormNew button[type="submit"]');
+                btn.disabled = false;
+                btn.innerHTML = 'เพิ่มผู้กำกับ';
+            }
+        }
+
+        function showSuccessMessage(message) {
+            const msg = document.createElement('div');
+            msg.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #28a745;
+                color: white;
+                padding: 16px 24px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+                z-index: 3000;
+                animation: slideInRight 0.3s ease-out;
+            `;
+            msg.textContent = '✓ ' + message;
+            document.body.appendChild(msg);
+            
+            setTimeout(() => {
+                msg.style.animation = 'slideOutRight 0.3s ease-out';
+                setTimeout(() => msg.remove(), 300);
+            }, 3000);
+        }
+
+        // ========================================
+        // Advanced Functions
+        // ========================================
+
+        function viewActivityDetail(activityId) {
+            const activity = activitiesData.find(a => a.id === activityId);
+            if (!activity) {
+                alert('ไม่พบกิจกรรมนี้');
+                return;
+            }
+
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 700px;">
+                    <div class="modal-header">
+                        <h2>${activity.name}</h2>
+                        <button class="close-btn" onclick="this.closest('.modal').remove()">&times;</button>
+                    </div>
+                    <div style="padding: 20px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                            <div>
+                                <strong>วันที่:</strong><br>
+                                <span style="color: #666;">${activity.date}</span>
+                            </div>
+                            <div>
+                                <strong>ระดับชั้น:</strong><br>
+                                <span style="color: #666;">${activity.grade}</span>
+                            </div>
+                            <div>
+                                <strong>สถานที่:</strong><br>
+                                <span style="color: #666;">${activity.location}</span>
+                            </div>
+                            <div>
+                                <strong>ผู้รับผิดชอบ:</strong><br>
+                                <span style="color: #666;">${activity.responsible}</span>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px;">
+                            <strong>รายละเอียด:</strong>
+                            <p style="background: #f8f9fa; padding: 12px; border-radius: 5px; margin-top: 8px; color: #666;">
+                                ${activity.description}
+                            </p>
+                        </div>
+
+                        ${activity.attendance && activity.attendance.length > 0 ? `
+                            <div>
+                                <strong>ผู้เข้าร่วม (${activity.attendance.length} คน)</strong>
+                                <table class="attendance-table" style="margin-top: 10px;">
+                                    <thead>
+                                        <tr>
+                                            <th>ลำดับ</th>
+                                            <th>ชื่อ-นามสกุล</th>
+                                            <th style="width: 100px; text-align: center;">สถานะ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${activity.attendance.map((a, idx) => {
+                                            let statusText = '';
+                                            let statusColor = '';
+                                            switch(a.status) {
+                                                case 'present':
+                                                    statusText = '✓ มา';
+                                                    statusColor = '#28a745';
+                                                    break;
+                                                case 'leave':
+                                                    statusText = '📝 ลา';
+                                                    statusColor = '#ffc107';
+                                                    break;
+                                                case 'absent':
+                                                    statusText = '✗ ขาด';
+                                                    statusColor = '#dc3545';
+                                                    break;
+                                                case 'skip':
+                                                    statusText = '🚫 โดด';
+                                                    statusColor = '#e83e8c';
+                                                    break;
+                                            }
+                                            return `
+                                                <tr>
+                                                    <td>${idx + 1}</td>
+                                                    <td>${a.studentName || 'ไม่ทราบชื่อ'}</td>
+                                                    <td style="text-align: center; color: ${statusColor}; font-weight: bold;">
+                                                        ${statusText}
+                                                    </td>
+                                                </tr>
+                                            `;
+                                        }).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ` : '<p style="color: #999;">ยังไม่มีข้อมูลการเข้าร่วม</p>'}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function editStudent(id) {
+            const student = studentsData.find(s => s.id === id);
+            if (!student) {
+                alert('ไม่พบนักเรียนนี้');
+                return;
+            }
+
+            const name = prompt('ชื่อ-นามสกุล:', student.name);
+            if (name === null) return;
+
+            const grade = prompt('ระดับชั้น:', student.grade);
+            if (grade === null) return;
+
+            const number = prompt('เลขที่:', student.number);
+            if (number === null) return;
+
+            if (name && grade && number) {
+                updateStudentData(id, name, grade, number);
+            }
+        }
+
+        async function updateStudentData(id, name, grade, number) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'updateStudent',
+                        id: id,
+                        name: name,
+                        grade: grade,
+                        number: number
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('แก้ไขสำเร็จ');
+                    dataCache.clear();
+                    loadData();
+                    loadStudents();
+                } else {
+                    alert('เกิดข้อผิดพลาด: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('เกิดข้อผิดพลาด: ' + error.message);
+            }
+        }
+
+        function editTeacher(id) {
+            const teacher = teachersData.find(t => t.id === id);
+            if (!teacher) {
+                alert('ไม่พบผู้กำกับนี้');
+                return;
+            }
+
+            const name = prompt('ชื่อ-นามสกุล:', teacher.name);
+            if (name === null) return;
+
+            const email = prompt('อีเมล:', teacher.email || '');
+            if (email === null) return;
+
+            const phone = prompt('เบอร์โทร:', teacher.phone || '');
+            if (phone === null) return;
+
+            if (name) {
+                updateTeacherData(id, name, email, phone);
+            }
+        }
+
+        async function updateTeacherData(id, name, email, phone) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'updateTeacher',
+                        id: id,
+                        name: name,
+                        email: email,
+                        phone: phone
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('แก้ไขสำเร็จ');
+                    dataCache.clear();
+                    loadData();
+                    loadTeachers();
+                } else {
+                    alert('เกิดข้อผิดพลาด: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('เกิดข้อผิดพลาด: ' + error.message);
+            }
+        }
+
+        async function deleteStudent(id) {
+            if (!confirm('ต้องการลบนักเรียนคนนี้หรือไม่?')) return;
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'deleteStudent',
+                        id: id
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('ลบสำเร็จ');
+                    dataCache.clear();
+                    loadData();
+                    loadStudents();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('เกิดข้อผิดพลาด');
+            }
+        }
+
+        async function deleteTeacher(id) {
+            if (!confirm('ต้องการลบผู้กำกับคนนี้หรือไม่?')) return;
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'deleteTeacher',
+                        id: id
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('ลบสำเร็จ');
+                    dataCache.clear();
+                    loadData();
+                    loadTeachers();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('เกิดข้อผิดพลาด');
+            }
+        }
+
+        async function submitCheck(activityId) {
+            const password = document.getElementById(`checkPass_${activityId}`).value;
+            const comment = document.getElementById(`checkComment_${activityId}`).value;
+
+            if (password !== 'check123') {
+                alert('รหัสผ่านไม่ถูกต้อง');
+                return;
+            }
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'submitCheck',
+                        activityId: activityId,
+                        checker: 'นางปณิตา ปัญญานะ',
+                        checkerDate: new Date().toLocaleString('th-TH'),
+                        checkerComment: comment
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('ตรวจสอบสำเร็จ');
+                    dataCache.clear();
+                    loadData();
+                    loadCheckerApprovals();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('เกิดข้อผิดพลาด');
+            }
+        }
+
+        async function submitApproval(activityId) {
+            const password = document.getElementById(`approvePass_${activityId}`).value;
+            const status = document.getElementById(`approveStatus_${activityId}`).value;
+            const comment = document.getElementById(`approveComment_${activityId}`).value;
+
+            if (password !== 'admin999') {
+                alert('รหัสผ่านไม่ถูกต้อง');
+                return;
+            }
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'submitApproval',
+                        activityId: activityId,
+                        approver: 'นางภิรญา สอนศิริ',
+                        approverDate: new Date().toLocaleString('th-TH'),
+                        approvalStatus: status,
+                        approverComment: comment
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert('อนุมัติสำเร็จ');
+                    dataCache.clear();
+                    loadData();
+                    loadDirectorApprovals();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('เกิดข้อผิดพลาด');
+            }
+        }
+
+        function generatePDF(activityId) {
+            const activity = activitiesData.find(a => a.id === activityId);
+            if (!activity) {
+                alert('ไม่พบข้อมูลกิจกรรม');
+                return;
+            }
+
+            if (!activity.checker || !activity.approver) {
+                alert('กรุณาให้ผู้ตรวจและผู้อนุมัติลงนามก่อนพิมพ์รายงาน');
+                return;
+            }
+
+            window.open(`${API_URL}?action=generatePDF&activityId=${activityId}`, '_blank');
+        }
+
+        // ========================================
+        // Auto-refresh and Event Listeners
+        // ========================================
+
+        setInterval(() => {
+            console.log('Auto-refreshing cache...');
+            dataCache.clear();
+            loadData();
+        }, 10 * 60 * 1000);
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+
+        // ========================================
+        // Initialize
+        // ========================================
+
+        window.onload = function() {
+            loadData();
+        };
+    </script>
+</body>
+</html>* {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -766,6 +1574,107 @@
         .summary-total .number {
             color: #1e3c72;
         }
+
+        /* Activity Detail Modal Styles */
+        .activity-detail-modal {
+            max-width: 1000px;
+            width: 95%;
+        }
+
+        .activity-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .activity-images img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .activity-images img:hover {
+            transform: scale(1.05);
+        }
+
+        .image-lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-image {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+        }
+
+        .activity-attendance-summary {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .attendance-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            background: white;
+        }
+
+        .stat-item .number {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-item .label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .checker-only {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+        }
+
+        .approval-only {
+            background: #f3e5f5;
+            border-left: 4px solid #9c27b0;
+        }
     </style>
 </head>
 <body>
@@ -784,7 +1693,8 @@
             <button class="nav-tab active" onclick="showTab('dashboard')">📊 แดชบอร์ด</button>
             <button class="nav-tab" onclick="showTab('activities')">📋 บันทึกกิจกรรม</button>
             <button class="nav-tab" onclick="showTab('reports')">📈 รายงาน</button>
-            <button class="nav-tab" onclick="showTab('approval')">✅ อนุมัติรายงาน</button>
+            <button class="nav-tab" onclick="showTab('checker')">✅ ตรวจสอบรายงาน</button>
+            <button class="nav-tab" onclick="showTab('approval')">🔖 อนุมัติรายงาน</button>
             <button class="nav-tab" onclick="showTab('students')">👥 จัดการนักเรียน</button>
             <button class="nav-tab" onclick="showTab('teachers')">👨‍🏫 จัดการผู้กำกับ</button>
         </div>
@@ -856,9 +1766,15 @@
                 </div>
             </div>
 
+            <!-- Checker Tab -->
+            <div id="checker" class="tab-content">
+                <h2 style="margin-bottom: 20px; color: #1e3c72;">ตรวจสอบรายงานกิจกรรม - นางปณิตา ปัญญานะ</h2>
+                <div id="checkerList"></div>
+            </div>
+
             <!-- Approval Tab -->
             <div id="approval" class="tab-content">
-                <h2 style="margin-bottom: 20px; color: #1e3c72;">อนุมัติรายงานกิจกรรม</h2>
+                <h2 style="margin-bottom: 20px; color: #1e3c72;">อนุมัติรายงานกิจกรรม - นางภิรญา สอนศิริ</h2>
                 <div id="approvalList"></div>
             </div>
 
@@ -1165,7 +2081,8 @@
             if (tabName === 'dashboard') loadDashboard();
             if (tabName === 'activities') loadActivities();
             if (tabName === 'reports') loadReports();
-            if (tabName === 'approval') loadApprovals();
+            if (tabName === 'checker') loadCheckerApprovals();
+            if (tabName === 'approval') loadDirectorApprovals();
             if (tabName === 'students') loadStudents();
             if (tabName === 'teachers') loadTeachers();
         }
@@ -1345,24 +2262,79 @@
             document.getElementById('reportTable').innerHTML = html || '<tr><td colspan="9" style="text-align: center; color: #6c757d;">ยังไม่มีข้อมูล</td></tr>';
         }
 
-        function loadApprovals() {
-            const html = activitiesData.map(activity => `
-                <div class="approval-box">
+        function loadCheckerApprovals() {
+            // แสดงเฉพาะรายงานที่ยังไม่ได้ตรวจ หรือ ตรวจแล้วแต่ยังไม่ผ่านการอนุมัติ
+            const pendingCheck = activitiesData.filter(activity => !activity.checker);
+            
+            const html = pendingCheck.map(activity => `
+                <div class="approval-box checker-only">
                     <h3>${activity.name}</h3>
                     <div class="activity-meta" style="margin-bottom: 15px;">
                         <span>📅 ${activity.date}</span>
                         <span>🎯 ${activity.grade}</span>
                         <span>👤 ผู้รายงาน: ${activity.reporter || '-'}</span>
                     </div>
-                    ${renderApprovalSection(activity)}
+                    
                     <div style="margin-top: 15px;">
-                        <button class="btn" onclick="viewActivityDetail('${activity.id}')">ดูรายละเอียด</button>
-                        <button class="btn btn-success" onclick="generatePDF('${activity.id}')">พิมพ์รายงาน PDF</button>
+                        <button class="btn" onclick="viewFullActivityDetail('${activity.id}')">ดูรายละเอียดเต็ม</button>
+                    </div>
+                    
+                    <div class="approval-section" style="margin-top: 15px;">
+                        <div class="approval-box">
+                            <h4>✅ ตรวจสอบโดย: นางปณิตา ปัญญานะ</h4>
+                            <input type="password" id="checkPass_${activity.id}" placeholder="รหัสผ่าน (check123)" style="margin: 10px 0; padding: 10px; width: 200px;">
+                            <textarea id="checkComment_${activity.id}" placeholder="ความคิดเห็น" style="margin: 10px 0; padding: 10px; width: 100%; height: 80px;"></textarea>
+                            <button class="btn btn-success" onclick="submitCheck('${activity.id}')">ตรวจสอบและลงนาม</button>
+                        </div>
                     </div>
                 </div>
             `).join('');
 
-            document.getElementById('approvalList').innerHTML = html || '<p style="color: #6c757d; text-align: center; padding: 40px;">ยังไม่มีรายงานที่รออนุมัติ</p>';
+            document.getElementById('checkerList').innerHTML = html || '<p style="color: #6c757d; text-align: center; padding: 40px;">ไม่มีรายงานรอตรวจสอบ</p>';
+        }
+
+        function loadDirectorApprovals() {
+            // แสดงเฉพาะรายงานที่ตรวจแล้ว แต่ยังไม่ได้อนุมัติ
+            const checkedActivities = activitiesData.filter(activity => activity.checker && !activity.approver);
+            
+            const html = checkedActivities.map(activity => `
+                <div class="approval-box approval-only">
+                    <h3>${activity.name}</h3>
+                    <div class="activity-meta" style="margin-bottom: 15px;">
+                        <span>📅 ${activity.date}</span>
+                        <span>🎯 ${activity.grade}</span>
+                        <span>👤 ผู้รายงาน: ${activity.reporter || '-'}</span>
+                        <span>✅ ตรวจโดย: ${activity.checker}</span>
+                    </div>
+                    
+                    <div style="margin-top: 15px;">
+                        <button class="btn" onclick="viewFullActivityDetail('${activity.id}')">ดูรายละเอียดเต็ม</button>
+                        <button class="btn btn-success" onclick="generatePDF('${activity.id}')">พิมพ์รายงาน PDF</button>
+                    </div>
+                    
+                    <div class="approval-section" style="margin-top: 15px;">
+                        <div class="approval-box">
+                            <h4>📋 ผลการตรวจสอบ</h4>
+                            <p><strong>ผู้ตรวจ:</strong> ${activity.checker}</p>
+                            <p><strong>วันที่ตรวจ:</strong> ${activity.checkerDate}</p>
+                            <p><strong>ความคิดเห็น:</strong> ${activity.checkerComment || 'ไม่มีความคิดเห็น'}</p>
+                        </div>
+                        
+                        <div class="approval-box">
+                            <h4>🔖 อนุมัติโดย: นางภิรญา สอนศิริ (รองผู้อำนวยการฯ)</h4>
+                            <input type="password" id="approvePass_${activity.id}" placeholder="รหัสผ่าน (admin999)" style="margin: 10px 0; padding: 10px; width: 200px;">
+                            <select id="approveStatus_${activity.id}" style="margin: 10px 0; padding: 10px;">
+                                <option value="ผ่าน">✅ ผ่าน</option>
+                                <option value="ไม่ผ่าน">❌ ไม่ผ่าน</option>
+                            </select>
+                            <textarea id="approveComment_${activity.id}" placeholder="ความคิดเห็น" style="margin: 10px 0; padding: 10px; width: 100%; height: 80px;"></textarea>
+                            <button class="btn btn-success" onclick="submitApproval('${activity.id}')">อนุมัติและลงนาม</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('approvalList').innerHTML = html || '<p style="color: #6c757d; text-align: center; padding: 40px;">ไม่มีรายงานรออนุมัติ</p>';
         }
 
         function renderApprovalSection(activity) {
