@@ -637,6 +637,142 @@ form {
   background: #e0e0e0;
 }
 
+/* Attendance Table ปรับปรุง */
+.attendance-table-enhanced {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  background: white;
+}
+
+.attendance-table-enhanced th {
+  background: #1e3c72;
+  color: white;
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.attendance-table-enhanced td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.attendance-table-enhanced tr:hover {
+  background: #f8f9fa;
+}
+
+.attendance-status {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.status-radio {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.status-radio input[type="radio"] {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+}
+
+.status-label {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  min-width: 45px;
+  text-align: center;
+}
+
+.status-present {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-late {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-absent {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.status-truant {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.attendance-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.summary-card {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  border-left: 4px solid #1e3c72;
+}
+
+.summary-card.present {
+  border-left-color: #28a745;
+}
+
+.summary-card.late {
+  border-left-color: #ffc107;
+}
+
+.summary-card.absent {
+  border-left-color: #dc3545;
+}
+
+.summary-card.truant {
+  border-left-color: #17a2b8;
+}
+
+.summary-label {
+  font-size: 12px;
+  color: #6c757d;
+  margin-bottom: 5px;
+}
+
+.summary-number {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e3c72;
+}
+
+.summary-card.present .summary-number {
+  color: #28a745;
+}
+
+.summary-card.late .summary-number {
+  color: #ffc107;
+}
+
+.summary-card.absent .summary-number {
+  color: #dc3545;
+}
+
+.summary-card.truant .summary-number {
+  color: #17a2b8;
+}
+        
 /* Responsive */
 @media (max-width: 600px) {
   .modal-container {
@@ -875,142 +1011,41 @@ form {
                         </div>
                     </div>
                 </div>
-                /* Attendance Table ปรับปรุง */
-.attendance-table-enhanced {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-  background: white;
-}
-
-.attendance-table-enhanced th {
-  background: #1e3c72;
-  color: white;
-  padding: 12px;
-  text-align: left;
-  font-weight: 600;
-}
-
-.attendance-table-enhanced td {
-  padding: 10px 12px;
-  border-bottom: 1px solid #e9ecef;
-}
-
-.attendance-table-enhanced tr:hover {
-  background: #f8f9fa;
-}
-
-/* Status Badge */
-.attendance-status {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-}
-
-.status-radio {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  cursor: pointer;
-}
-
-.status-radio input[type="radio"] {
-  cursor: pointer;
-  width: 18px;
-  height: 18px;
-}
-
-.status-label {
-  font-size: 12px;
-  font-weight: 600;
-  padding: 4px 8px;
-  border-radius: 4px;
-  min-width: 45px;
-  text-align: center;
-}
-
-.status-present {
-  background: #d4edda;
-  color: #155724;
-}
-
-.status-late {
-  background: #fff3cd;
-  color: #856404;
-}
-
-.status-absent {
-  background: #f8d7da;
-  color: #721c24;
-}
-
-.status-truant {
-  background: #d1ecf1;
-  color: #0c5460;
-}
-
-/* Summary Section */
-.attendance-summary {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 12px;
-  margin-top: 20px;
-  padding: 20px;
-  background: #f8f9fa;
-  border-radius: 10px;
-}
-
-.summary-card {
-  background: white;
-  padding: 15px;
-  border-radius: 8px;
-  text-align: center;
-  border-left: 4px solid #1e3c72;
-}
-
-.summary-card.present {
-  border-left-color: #28a745;
-}
-
-.summary-card.late {
-  border-left-color: #ffc107;
-}
-
-.summary-card.absent {
-  border-left-color: #dc3545;
-}
-
-.summary-card.truant {
-  border-left-color: #17a2b8;
-}
-
-.summary-label {
-  font-size: 12px;
-  color: #6c757d;
-  margin-bottom: 5px;
-}
-
-.summary-number {
-  font-size: 28px;
-  font-weight: 700;
-  color: #1e3c72;
-}
-
-.summary-card.present .summary-number {
-  color: #28a745;
-}
-
-.summary-card.late .summary-number {
-  color: #ffc107;
-}
-
-.summary-card.absent .summary-number {
-  color: #dc3545;
-}
-
-.summary-card.truant .summary-number {
-  color: #17a2b8;
-}
+                <div class="form-group">
+    <label style="color: #1e3c72; font-weight: 700; font-size: 16px;">เช็คชื่อนักเรียน</label>
+    <table class="attendance-table-enhanced">
+        <thead>
+            <tr>
+                <th style="width: 50px;">ลำดับ</th>
+                <th>ชื่อ-นามสกุล</th>
+                <th style="width: 200px; text-align: center;">สถานะ</th>
+            </tr>
+        </thead>
+        <tbody id="attendanceListEnhanced"></tbody>
+    </table>
+    <div class="attendance-summary">
+        <div class="summary-card present">
+            <div class="summary-label">มา</div>
+            <div class="summary-number" id="summaryPresent">0</div>
+        </div>
+        <div class="summary-card late">
+            <div class="summary-label">ลา</div>
+            <div class="summary-number" id="summaryLate">0</div>
+        </div>
+        <div class="summary-card absent">
+            <div class="summary-label">ขาด</div>
+            <div class="summary-number" id="summaryAbsent">0</div>
+        </div>
+        <div class="summary-card truant">
+            <div class="summary-label">โดด</div>
+            <div class="summary-number" id="summaryTruant">0</div>
+        </div>
+        <div class="summary-card" style="border-left-color: #6c757d;">
+            <div class="summary-label">รวมทั้งหมด</div>
+            <div class="summary-number" style="color: #6c757d;" id="summaryTotal">0</div>
+        </div>
+    </div>
+</div>
                 <div class="form-group">
                     <label>ผู้รายงาน *</label>
                     <input type="text" name="reporter" required placeholder="ชื่อครูผู้รายงาน">
@@ -1431,7 +1466,36 @@ setInterval(() => {
         // Modal Functions
         function openActivityForm() {
             document.getElementById('activityModal').classList.add('active');
-            loadStudentsForAttendance();
+            function loadStudentsForAttendance() {
+    const html = studentsData.map((s, i) => `
+        <tr>
+            <td style="text-align: center;">${i + 1}</td>
+            <td>${s.name}</td>
+            <td>
+                <div class="attendance-status">
+                    <label class="status-radio">
+                        <input type="radio" name="attendance_${s.id}" value="present" checked onchange="updateSummary()">
+                        <span class="status-label status-present">มา</span>
+                    </label>
+                    <label class="status-radio">
+                        <input type="radio" name="attendance_${s.id}" value="late" onchange="updateSummary()">
+                        <span class="status-label status-late">ลา</span>
+                    </label>
+                    <label class="status-radio">
+                        <input type="radio" name="attendance_${s.id}" value="absent" onchange="updateSummary()">
+                        <span class="status-label status-absent">ขาด</span>
+                    </label>
+                    <label class="status-radio">
+                        <input type="radio" name="attendance_${s.id}" value="truant" onchange="updateSummary()">
+                        <span class="status-label status-truant">โดด</span>
+                    </label>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+    document.getElementById('attendanceListEnhanced').innerHTML = html;
+    updateSummary();
+}
             loadTeachersForSelect();
         }
 
