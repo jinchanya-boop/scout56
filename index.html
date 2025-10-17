@@ -1022,8 +1022,60 @@
         createModal('activityFormModal', 'บันทึกกิจกรรมใหม่', content);
     }
     
-    function openStudentForm() { /* ... function to open student form ... */ }
-    function openTeacherForm() { /* ... function to open teacher form ... */ }
+    function openStudentForm() {
+        const content = `
+            <form id="studentFormNew" onsubmit="submitStudentForm(event)">
+                <div class="form-group">
+                    <label>ชื่อ-นามสกุล *</label>
+                    <input type="text" id="studentName" required placeholder="เช่น เด็กชายสมชาย ใจดี">
+                </div>
+                <div class="form-group">
+                    <label>ระดับชั้น *</label>
+                    <select id="studentGrade" required>
+                        <option value="">-- เลือกระดับชั้น --</option>
+                        <option value="ป.1">ประถมศึกษาปีที่ 1</option><option value="ป.2">ประถมศึกษาปีที่ 2</option>
+                        <option value="ป.3/1">ประถมศึกษาปีที่ 3/1</option><option value="ป.3/2">ประถมศึกษาปีที่ 3/2</option>
+                        <option value="ป.4/1">ประถมศึกษาปีที่ 4/1</option><option value="ป.4/2">ประถมศึกษาปีที่ 4/2</option>
+                        <option value="ป.5/1">ประถมศึกษาปีที่ 5/1</option><option value="ป.5/2">ประถมศึกษาปีที่ 5/2</option>
+                        <option value="ป.6/1">ประถมศึกษาปีที่ 6/1</option><option value="ป.6/2">ประถมศึกษาปีที่ 6/2</option><option value="ป.6/3">ประถมศึกษาปีที่ 6/3</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>เลขที่ *</label>
+                    <input type="number" id="studentNumber" required placeholder="1-50" min="1" max="50">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="document.getElementById('studentFormModal').remove()">ยกเลิก</button>
+                    <button type="submit" class="btn-submit">เพิ่มนักเรียน</button>
+                </div>
+            </form>
+        `;
+        createModal('studentFormModal', 'เพิ่มข้อมูลนักเรียนใหม่', content, '600px');
+    }
+
+    function openTeacherForm() {
+        const content = `
+            <form id="teacherFormNew" onsubmit="submitTeacherForm(event)">
+                <div class="form-group">
+                    <label>ชื่อ-นามสกุล *</label>
+                    <input type="text" id="teacherName" required placeholder="เช่น นางสาวสมศรี สอนดี">
+                </div>
+                <div class="form-group">
+                    <label>อีเมล</label>
+                    <input type="email" id="teacherEmail" placeholder="example@email.com">
+                </div>
+                <div class="form-group">
+                    <label>เบอร์โทร</label>
+                    <input type="tel" id="teacherPhone" placeholder="08xxxxxxxx">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="document.getElementById('teacherFormModal').remove()">ยกเลิก</button>
+                    <button type="submit" class="btn-submit">เพิ่มผู้กำกับ</button>
+                </div>
+            </form>
+        `;
+        createModal('teacherFormModal', 'เพิ่มข้อมูลผู้กำกับใหม่', content, '600px');
+    }
 
     // ========================================
     // Form & Action Submissions
@@ -1064,13 +1116,114 @@
         const success = await postData('addActivity', activityData, 'บันทึกกิจกรรมสำเร็จ');
         if (success) { document.getElementById('activityFormModal').remove(); loadData(true); }
     }
+
+    async function submitStudentForm(event) {
+        event.preventDefault();
+        const studentData = {
+            name: document.getElementById('studentName').value.trim(),
+            grade: document.getElementById('studentGrade').value,
+            number: document.getElementById('studentNumber').value
+        };
+        if (!studentData.name || !studentData.grade || !studentData.number) {
+            alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+            return;
+        }
+        const success = await postData('addStudent', { id: 'STU_' + Date.now(), ...studentData }, 'เพิ่มนักเรียนสำเร็จ');
+        if (success) {
+            document.getElementById('studentFormModal').remove();
+            await loadData(true);
+        }
+    }
+
+    async function submitTeacherForm(event) {
+        event.preventDefault();
+        const teacherData = {
+            name: document.getElementById('teacherName').value.trim(),
+            email: document.getElementById('teacherEmail').value.trim(),
+            phone: document.getElementById('teacherPhone').value.trim()
+        };
+        if (!teacherData.name) {
+            alert('กรุณากรอกชื่อ-นามสกุล');
+            return;
+        }
+        const success = await postData('addTeacher', { id: 'TCH_' + Date.now(), ...teacherData }, 'เพิ่มผู้กำกับสำเร็จ');
+        if (success) {
+            document.getElementById('teacherFormModal').remove();
+            await loadData(true);
+        }
+    }
     
-    async function submitStudentForm(event) { /* ... */ }
-    async function submitTeacherForm(event) { /* ... */ }
-    async function deleteStudent(id) { /* ... */ }
-    async function editStudent(id) { /* ... */ }
-    async function deleteTeacher(id) { /* ... */ }
-    async function editTeacher(id) { /* ... */ }
+    // ========================================
+    // Student & Teacher Action Functions
+    // ========================================
+
+    async function editStudent(id) {
+        const student = studentsData.find(s => s.id === id);
+        if (!student) {
+            return alert('ไม่พบข้อมูลนักเรียน');
+        }
+
+        const name = prompt('แก้ไขชื่อ-นามสกุล:', student.name);
+        if (name === null) return; // User clicked cancel
+
+        const grade = prompt('แก้ไขระดับชั้น:', student.grade);
+        if (grade === null) return;
+
+        const number = prompt('แก้ไขเลขที่:', student.number);
+        if (number === null) return;
+
+        if (name.trim() && grade.trim() && number.trim()) {
+            const success = await postData('updateStudent', { id, name, grade, number }, 'แก้ไขข้อมูลนักเรียนสำเร็จ');
+            if (success) {
+                await loadData(true); // Ensure data is reloaded before rendering
+            }
+        } else {
+            alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+        }
+    }
+
+    async function deleteStudent(id) {
+        if (!confirm('คุณแน่ใจหรือไม่ว่าต้องการลบนักเรียนคนนี้? การกระทำนี้ไม่สามารถย้อนกลับได้')) return;
+        
+        const success = await postData('deleteStudent', { id }, 'ลบนักเรียนสำเร็จ');
+        if (success) {
+            await loadData(true); // Reload data after deletion
+        }
+    }
+
+    async function editTeacher(id) {
+        const teacher = teachersData.find(t => t.id === id);
+        if (!teacher) {
+            return alert('ไม่พบข้อมูลผู้กำกับ');
+        }
+
+        const name = prompt('แก้ไขชื่อ-นามสกุล:', teacher.name);
+        if (name === null) return;
+
+        const email = prompt('แก้ไขอีเมล:', teacher.email || '');
+        if (email === null) return;
+
+        const phone = prompt('แก้ไขเบอร์โทร:', teacher.phone || '');
+        if (phone === null) return;
+
+        if (name.trim()) {
+            const success = await postData('updateTeacher', { id, name, email, phone }, 'แก้ไขข้อมูลผู้กำกับสำเร็จ');
+            if (success) {
+                await loadData(true);
+            }
+        } else {
+            alert('กรุณากรอกชื่อ-นามสกุล');
+        }
+    }
+
+    async function deleteTeacher(id) {
+        if (!confirm('คุณแน่ใจหรือไม่ว่าต้องการลบผู้กำกับท่านนี้? การกระทำนี้ไม่สามารถย้อนกลับได้')) return;
+
+        const success = await postData('deleteTeacher', { id }, 'ลบผู้กำกับสำเร็จ');
+        if (success) {
+            await loadData(true);
+        }
+    }
 
     async function submitCheck(activityId) {
          const password = document.getElementById(`checkPass_${activityId}`).value;
