@@ -1081,9 +1081,96 @@
     }
 
     // This function is just one example, you need to create similar for others
-    function openActivityForm(){
-        alert("Function openActivityForm is now working!");
-        // Add the logic to create and show the activity form modal here.
+    function openActivityForm() {
+        // Filter students for attendance list based on the selected grade
+        const getStudentsByGrade = (grade) => {
+            if (!grade) return '<tr><td colspan="3" class="loading-placeholder">กรุณาเลือกระดับชั้นเพื่อแสดงรายชื่อ</td></tr>';
+            
+            const filteredStudents = studentsData.filter(s => s.grade === grade).sort((a, b) => a.number - b.number);
+            if (filteredStudents.length === 0) {
+                 return '<tr><td colspan="3" class="loading-placeholder">ไม่พบนักเรียนในระดับชั้นนี้</td></tr>';
+            }
+            
+            return filteredStudents.map(student => `
+                <tr>
+                    <td>${student.number}</td>
+                    <td>${student.name}</td>
+                    <td class="text-center">
+                         <div style="display: flex; gap: 5px; justify-content: center; flex-wrap: wrap;">
+                            <label><input type="radio" name="attendance_${student.id}" value="present" checked> มา</label>
+                            <label><input type="radio" name="attendance_${student.id}" value="leave"> ลา</label>
+                            <label><input type="radio" name="attendance_${student.id}" value="absent"> ขาด</label>
+                            <label><input type="radio" name="attendance_${student.id}" value="skip"> โดด</label>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        };
+
+        // Teacher options for the select dropdown
+        const teacherOptions = teachersData.map(t => `<option value="${t.name}">${t.name}</option>`).join('') + '<option value="manual">กรอกด้วยตนเอง</option>';
+        
+        const content = `
+            <form id="activityFormNew" onsubmit="submitActivityForm(event)">
+                <div class="form-group">
+                    <label>วันที่จัดกิจกรรม *</label>
+                    <input type="date" name="activityDate" required value="${new Date().toISOString().split('T')[0]}">
+                </div>
+                <div class="form-group">
+                    <label>หน่วย/ระดับชั้น *</label>
+                    <select name="grade" required onchange="document.getElementById('attendanceList').innerHTML = getStudentsByGrade(this.value);">
+                        <option value="">-- เลือกระดับชั้น --</option>
+                        <option value="ป.1">ประถมศึกษาปีที่ 1</option><option value="ป.2">ประถมศึกษาปีที่ 2</option>
+                        <option value="ป.3/1">ประถมศึกษาปีที่ 3/1</option><option value="ป.3/2">ประถมศึกษาปีที่ 3/2</option>
+                        <option value="ป.4/1">ประถมศึกษาปีที่ 4/1</option><option value="ป.4/2">ประถมศึกษาปีที่ 4/2</option>
+                        <option value="ป.5/1">ประถมศึกษาปีที่ 5/1</option><option value="ป.5/2">ประถมศึกษาปีที่ 5/2</option>
+                        <option value="ป.6/1">ประถมศึกษาปีที่ 6/1</option><option value="ป.6/2">ประถมศึกษาปีที่ 6/2</option><option value="ป.6/3">ประถมศึกษาปีที่ 6/3</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>ชื่อกิจกรรม *</label>
+                    <input type="text" name="activityName" required placeholder="เช่น การผูกเงื่อน, การปฐมพยาบาล">
+                </div>
+                <div class="form-group">
+                    <label>รายละเอียดกิจกรรม *</label>
+                    <textarea name="description" required placeholder="อธิบายกิจกรรมโดยละเอียด"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>สถานที่จัด *</label>
+                    <input type="text" name="location" required placeholder="เช่น สนามโรงเรียน, ห้องประชุม">
+                </div>
+                <div class="form-group">
+                    <label>ผู้รับผิดชอบ *</label>
+                    <select name="responsible" required onchange="document.getElementById('manualResponsibleWrapper').style.display = this.value === 'manual' ? 'block' : 'none';">
+                        <option value="">-- เลือกผู้กำกับ --</option>
+                        ${teacherOptions}
+                    </select>
+                    <div id="manualResponsibleWrapper" style="display:none; margin-top:10px;">
+                         <input type="text" name="responsibleManual" placeholder="กรอกชื่อผู้รับผิดชอบ">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>เช็คชื่อนักเรียน</label>
+                    <div class="data-table-container" style="max-height: 350px; overflow-y: auto;">
+                        <table class="data-table">
+                            <thead><tr><th>เลขที่</th><th>ชื่อ-นามสกุล</th><th class="text-center">สถานะ</th></tr></thead>
+                            <tbody id="attendanceList">
+                                <tr><td colspan="3" class="loading-placeholder">กรุณาเลือกระดับชั้นเพื่อแสดงรายชื่อ</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>ผู้รายงาน *</label>
+                    <input type="text" name="reporter" required placeholder="ชื่อครูผู้รายงาน">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="document.getElementById('activityFormModal').remove()">ยกเลิก</button>
+                    <button type="submit" class="btn-submit">บันทึกกิจกรรม</button>
+                </div>
+            </form>
+        `;
+        createModal('activityFormModal', 'บันทึกกิจกรรมใหม่', content);
     }
 
 
@@ -1102,7 +1189,59 @@
         document.getElementById('studentFormModal').remove();
         loadData(true);
     }
-    
+
+
+    async function submitActivityForm(event) {
+        event.preventDefault();
+        const form = event.target;
+        const formData = new FormData(form);
+
+        const grade = formData.get('grade');
+        if (!grade) {
+            alert('กรุณาเลือกระดับชั้น');
+            return;
+        }
+
+        const attendance = studentsData
+            .filter(student => student.grade === grade)
+            .map(student => {
+                const status = form.querySelector(`input[name="attendance_${student.id}"]:checked`);
+                return {
+                    studentId: student.id,
+                    studentName: student.name,
+                    status: status ? status.value : 'absent' // Default to absent if not found
+                };
+            });
+        
+        let responsible = formData.get('responsible');
+        if (responsible === 'manual') {
+            responsible = formData.get('responsibleManual').trim();
+        }
+
+        const activityData = {
+            id: 'ACT_' + Date.now(),
+            date: formData.get('activityDate'),
+            grade: grade,
+            name: formData.get('activityName').trim(),
+            description: formData.get('description').trim(),
+            location: formData.get('location').trim(),
+            responsible: responsible,
+            reporter: formData.get('reporter').trim(),
+            attendance: attendance,
+            images: [] // Image upload can be added later
+        };
+
+        if (!activityData.name || !activityData.description || !activityData.location || !activityData.responsible || !activityData.reporter) {
+            alert('กรุณากรอกข้อมูลที่มีเครื่องหมาย * ให้ครบถ้วน');
+            return;
+        }
+
+        const success = await postData('addActivity', activityData, 'บันทึกกิจกรรมสำเร็จ');
+        if (success) {
+            document.getElementById('activityFormModal').remove();
+            loadData(true);
+        }
+    }
     // ... Other form submission functions ...
 
     async function postData(action, data, successMessage) {
