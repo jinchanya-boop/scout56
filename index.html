@@ -1688,70 +1688,7 @@ setInterval(() => {
             }
         });
 
-        function openStudentForm() {
-            const name = prompt('ชื่อ-นามสกุลนักเรียน:');
-            const grade = prompt('ระดับชั้น (เช่น ม.1):');
-            const number = prompt('เลขที่:');
-
-            if (name && grade && number) {
-                addStudent({ name, grade, number });
-            }
-        }
-
-        async function addStudent(studentData) {
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        action: 'addStudent',
-                        id: 'STU_' + Date.now(),
-                        ...studentData
-                    })
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    alert('เพิ่มนักเรียนสำเร็จ');
-                    loadData();
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('เกิดข้อผิดพลาด');
-            }
-        }
-
-        function openTeacherForm() {
-            const name = prompt('ชื่อ-นามสกุลผู้กำกับ:');
-            const email = prompt('อีเมล:');
-            const phone = prompt('เบอร์โทร:');
-
-            if (name) {
-                addTeacher({ name, email, phone });
-            }
-        }
-
-        async function addTeacher(teacherData) {
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        action: 'addTeacher',
-                        id: 'TCH_' + Date.now(),
-                        ...teacherData
-                    })
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    alert('เพิ่มผู้กำกับสำเร็จ');
-                    loadData();
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('เกิดข้อผิดพลาด');
-            }
-        }
-
+        
         async function deleteStudent(id) {
             if (!confirm('ต้องการลบนักเรียนคนนี้หรือไม่?')) return;
 
