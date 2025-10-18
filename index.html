@@ -647,6 +647,7 @@
     // Global Variables & Configuration
     // ========================================
     const API_URL = 'https://script.google.com/macros/s/AKfycbwJanMQgcrcrMPyaYyo7DTBYVr6GU2FQoYJKv90hcqnNTzhcVc4Zj0REvGdExbDxxOE/exec';
+
     let studentsData = [];
     let activitiesData = [];
     let teachersData = [];
@@ -722,28 +723,62 @@
     // Data Loading
     // ========================================
     async function loadData(forceRefresh = false) {
-        if (studentsData.length > 0 && !forceRefresh) return;
+    if (studentsData.length > 0 && !forceRefresh) return;
 
-        try {
-            const response = await fetch(`${API_URL}?action=getData`);
-            if (!response.ok) throw new Error(`Network response was not ok (${response.status})`);
-            const data = await response.json();
-            
-            studentsData = data.students || [];
-            activitiesData = data.activities || [];
-            teachersData = data.teachers || [];
-            
-            console.log('Data loaded successfully.');
-            
-            const activeTabButton = document.querySelector('.nav-tab.active');
-            const activeTabId = activeTabButton ? activeTabButton.getAttribute('onclick').match(/'([^']+)'/)[1] : 'dashboard';
-            showTab({currentTarget: activeTabButton || document.querySelector('.nav-tab')}, activeTabId);
-
-        } catch (error) {
-            console.error('Error loading data:', error);
-            alert('เกิดข้อผิดพลาดในการโหลดข้อมูล: ' + error.message);
+    try {
+        console.log('Loading data from:', API_URL);
+        
+        const response = await fetch(`${API_URL}?action=getData`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        console.log('Response status:', response.status);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
+        
+        const data = await response.json();
+        console.log('Received data:', data);
+        
+        if (!data.success) {
+            throw new Error(data.message || 'เกิดข้อผิดพลาดจากเซิร์ฟเวอร์');
+        }
+        
+        studentsData = data.students || [];
+        activitiesData = data.activities || [];
+        teachersData = data.teachers || [];
+        
+        console.log('Data loaded successfully:', {
+            students: studentsData.length,
+            activities: activitiesData.length,
+            teachers: teachersData.length
+        });
+        
+        const activeTabButton = document.querySelector('.nav-tab.active');
+        const activeTabId = activeTabButton ? activeTabButton.getAttribute('onclick').match(/'([^']+)'/)[1] : 'dashboard';
+        showTab({currentTarget: activeTabButton || document.querySelector('.nav-tab')}, activeTabId);
+
+    } catch (error) {
+        console.error('Error loading data:', error);
+        
+        // แสดง error message ที่เป็นมิตรกับผู้ใช้
+        let errorMessage = 'เกิดข้อผิดพลาดในการโหลดข้อมูล';
+        
+        if (error.message.includes('CORS')) {
+            errorMessage = 'ปัญหาการเชื่อมต่อ: กรุณาตรวจสอบการตั้งค่า Google Apps Script';
+        } else if (error.message.includes('Failed to fetch')) {
+            errorMessage = 'ไม่สามารถเชื่อมต่อได้: กรุณาตรวจสอบ URL ของ API';
+        } else if (error.message.includes('HTTP 404')) {
+            errorMessage = 'ไม่พบ API: กรุณาตรวจสอบ URL และการ Deploy';
+        }
+        
+        alert(errorMessage + '\n\nรายละเอียด: ' + error.message);
     }
+}
     
     // ========================================
     // View Rendering Functions
@@ -1244,18 +1279,50 @@
     // Form & Action Submissions
     // ========================================
     async function postData(action, data, successMessage) {
-        try {
-            const response = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action, ...data }) });
-            const result = await response.json();
-            if (result.success) { if(successMessage) alert(successMessage); }
-            else { throw new Error(result.message || 'Unknown error'); }
-            return true;
-        } catch (error) {
-            console.error(`Error with action '${action}':`, error);
-            alert('เกิดข้อผิดพลาด: ' + error.message);
-            return false;
+    try {
+        console.log('Sending data:', { action, ...data });
+        
+        const response = await fetch(API_URL, { 
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ action, ...data }) 
+        });
+        
+        console.log('Response status:', response.status);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
+        
+        const result = await response.json();
+        console.log('Response data:', result);
+        
+        if (result.success) { 
+            if(successMessage) alert(successMessage); 
+            return true;
+        } else { 
+            throw new Error(result.message || 'เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ'); 
+        }
+        
+    } catch (error) {
+        console.error(`Error with action '${action}':`, error);
+        
+        let errorMessage = 'เกิดข้อผิดพลาด';
+        
+        if (error.message.includes('CORS')) {
+            errorMessage = 'ปัญหาการเชื่อมต่อ CORS';
+        } else if (error.message.includes('Failed to fetch')) {
+            errorMessage = 'การเชื่อมต่อล้มเหลว';
+        } else {
+            errorMessage = error.message;
+        }
+        
+        alert(errorMessage);
+        return false;
     }
+}
 
     // Helper function to convert file to Base64
 const fileToBase64 = file => new Promise((resolve, reject) => {
