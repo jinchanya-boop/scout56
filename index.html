@@ -1247,7 +1247,6 @@
         try {
             const response = await fetch(API_URL, {
                 method: 'POST',
-                // เพิ่ม Header 'Content-Type' เป็นมาตรฐานที่ดี
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -1256,7 +1255,11 @@
 
             // ตรวจสอบว่าเซิร์ฟเวอร์ตอบกลับมาโอเคหรือไม่
             if (!response.ok) {
-                 throw new Error(`Server responded with status: ${response.status}`);
+                 // พยายามอ่านข้อความ Error จาก server ถ้ามี (ช่วยในการ Debug)
+                 const errorText = await response.text();
+                 console.error("Server error response:", errorText);
+                 // แสดง Error ที่ชัดเจนขึ้น
+                 throw new Error(`Server ตอบกลับมีปัญหา: ${response.status}. ข้อความ: ${errorText}`);
             }
 
             // พยายามอ่าน JSON
@@ -1265,28 +1268,15 @@
             if (result.success) {
                 if (successMessage) alert(successMessage);
             } else {
-                throw new Error(result.message || 'Unknown error');
+                // โยน Error ที่มาจาก Apps Script โดยตรง
+                throw new Error(result.message || 'Unknown error from Apps Script');
             }
             return true;
 
         } catch (error) {
             console.error(`Error with action '${action}':`, error);
-
-            // ================== [ ✨ นี่คือส่วนที่แก้ไข ✨ ] ==================
-            // เราจะดักจับ Error 'Failed to fetch'
-            // ซึ่งเกิดจาก Google Script Timeout เพราะการอัปโหลดรูป
-            // แต่เนื่องจากผู้ใช้ยืนยันว่าข้อมูล "บันทึกแล้ว"
-            // เราจะถือว่า "สำเร็จ" เฉพาะกับ action 'addActivity'
-            // เพื่อไม่ให้ UI ค้าง และแสดง Error ที่ไม่จำเป็น
             
-            if (error.message.includes('Failed to fetch') && action === 'addActivity') {
-                console.warn(`'Failed to fetch' detected for '${action}'. Assuming success as data saves anyway.`);
-                if (successMessage) alert(successMessage); // แสดงข้อความ "สำเร็จ"
-                return true; // <--- คืนค่า true เพื่อให้โค้ดส่วนอื่นทำงานต่อ (ปิด Modal, โหลดข้อมูลใหม่)
-            }
-            // ================== [ จบส่วนที่แก้ไข ] ==================
-
-            // สำหรับ Error อื่นๆ หรือ action อื่นๆ ให้แสดงข้อความแจ้งเตือนตามปกติ
+            // ตอนนี้เรา *ต้องการ* เห็น Error ที่เกิดขึ้นจริง
             alert('เกิดข้อผิดพลาด: ' + error.message);
             return false;
         }
